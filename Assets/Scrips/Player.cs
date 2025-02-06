@@ -1,22 +1,30 @@
 using Unity.VisualScripting;
 using UnityEngine;
+using System.Collections;
 
 public class Player : MonoBehaviour
 {
     public Animator animator;
     public Rigidbody2D rb;
+
     public float jumpHeight = 1f;
     public bool isGround = true;
     private float movement;
     public float moveSpeed = 5f;
     private bool facingRight = true;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
+    private int comboStep = 0;
+    private Coroutine comboCoroutine;
+    public float comboResetTime = 1f; 
+
+    public Transform attackPoint;
+    public float attackRadius = 1.5f;
+    public LayerMask targetLayer;
+
     void Start()
     {
-
     }
 
-    // Update is called once per frame
     void Update()
     {
         movement = Input.GetAxis("Horizontal");
@@ -25,45 +33,81 @@ public class Player : MonoBehaviour
             transform.eulerAngles = new Vector3(0f, -180f, 0f);
             facingRight = false;
         }
-        else if (movement > 0f && facingRight == false)
+        else if (movement > 0f && !facingRight)
         {
-            transform.eulerAngles = new Vector3(0f, -0f, 0f);
+            transform.eulerAngles = new Vector3(0f, 0f, 0f);
             facingRight = true;
         }
 
-
-        if (Input.GetKey(KeyCode.Space) && isGround == true)
+        if (Input.GetKey(KeyCode.Space) && isGround)
         {
             Jump();
             isGround = false;
             animator.SetBool("Jump", true);
         }
+
         if (Mathf.Abs(movement) > 0f)
         {
             animator.SetFloat("Run", 1f);
         }
-        else if (movement < 0.1f)
+        else
         {
-            animator.SetFloat("Run", 0);
+            animator.SetFloat("Run", 0f);
         }
-        Attack();
 
+        Attack();
     }
+
     void Attack()
     {
         if (Input.GetMouseButtonDown(0))
         {
-            animator.SetTrigger("Attack");
+            if (comboCoroutine != null)
+            {
+                StopCoroutine(comboCoroutine);
+            }
+            comboStep++;
+            if (comboStep > 4)
+            {
+                comboStep = 1;
+            }
+
+            switch (comboStep)
+            {
+                case 1:
+                    animator.SetTrigger("Attack");
+                    break;
+                case 2:
+                    animator.SetTrigger("Attack1");
+                    break;
+                case 3:
+                    animator.SetTrigger("Attack2");
+                    break;
+                case 4:
+                    animator.SetTrigger("Attack3");
+                    break;
+            }
+
+            comboCoroutine = StartCoroutine(ResetCombo());
         }
     }
+
+    private IEnumerator ResetCombo()
+    {
+        yield return new WaitForSeconds(comboResetTime);
+        comboStep = 0;
+    }
+
     private void FixedUpdate()
     {
         transform.position += new Vector3(movement, 0f, 0f) * Time.fixedDeltaTime * moveSpeed;
     }
+
     void Jump()
     {
         rb.AddForce(new Vector2(0f, jumpHeight), ForceMode2D.Impulse);
     }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         Debug.Log(collision.gameObject.name);
@@ -72,5 +116,26 @@ public class Player : MonoBehaviour
             isGround = true;
             animator.SetBool("Jump", false);
         }
+    }
+    public void PlayerAttack()
+    {
+        Collider2D hitInfo = Physics2D.OverlapCircle(attackPoint.position, attackRadius, targetLayer);
+        if(hitInfo)
+        {
+            if(hitInfo.GetComponent<Health>() != null)
+            {
+                hitInfo.GetComponent<Health>().TakeDamage(1);
+            }
+
+        }
+    }
+    private void OnDrawGizmosSelected()
+    {
+        if (attackPoint == null)
+        {
+            return;
+        }
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(attackPoint.position, attackRadius);   
     }
 }
