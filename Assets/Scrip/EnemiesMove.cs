@@ -4,7 +4,7 @@ public class EnemiesMove : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     Vector3 position;
-    float step = 0.01f;
+    float step = 0.0051f;
     float direction = 1f;
     void Start()
     {
