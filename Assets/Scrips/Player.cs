@@ -15,11 +15,21 @@ public class Player : MonoBehaviour
 
     private int comboStep = 0;
     private Coroutine comboCoroutine;
-    public float comboResetTime = 1f; 
+    public float comboResetTime = 1f;
 
     public Transform attackPoint;
     public float attackRadius = 1.5f;
     public LayerMask targetLayer;
+
+    public int maxHealth = 10;
+
+    private bool canDash = true;
+    private bool isDashing;
+    private float dashingPower = 5f;
+    private float dashingTime = 0.3f;
+    private float dashingCooldown = 1f;
+
+    [SerializeField] private TrailRenderer tr;
 
     void Start()
     {
@@ -56,6 +66,17 @@ public class Player : MonoBehaviour
         }
 
         Attack();
+        if (maxHealth <= 0)
+        {
+        }
+        if (isDashing)
+        {
+            return;
+        }
+        if (Input.GetKeyDown(KeyCode.LeftShift) && canDash)
+        {
+            StartCoroutine(Dash());
+        }
     }
 
     void Attack()
@@ -101,6 +122,10 @@ public class Player : MonoBehaviour
     private void FixedUpdate()
     {
         transform.position += new Vector3(movement, 0f, 0f) * Time.fixedDeltaTime * moveSpeed;
+        if (isDashing)
+        {
+            return;
+        }
     }
 
     void Jump()
@@ -120,13 +145,12 @@ public class Player : MonoBehaviour
     public void PlayerAttack()
     {
         Collider2D hitInfo = Physics2D.OverlapCircle(attackPoint.position, attackRadius, targetLayer);
-        if(hitInfo)
+        if (hitInfo)
         {
-            if(hitInfo.GetComponent<Health>() != null)
+            if (hitInfo.GetComponent<Health>() != null)
             {
                 hitInfo.GetComponent<Health>().TakeDamage(1);
             }
-
         }
     }
     private void OnDrawGizmosSelected()
@@ -136,6 +160,33 @@ public class Player : MonoBehaviour
             return;
         }
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(attackPoint.position, attackRadius);   
+        Gizmos.DrawWireSphere(attackPoint.position, attackRadius);
+    }
+    public void PlayerTakeDamage(int damage)
+    {
+        if (maxHealth <= 0)
+        {
+            return;
+        }
+        maxHealth -= damage;
+    }
+    void Die()
+    {
+        Debug.Log(this.transform.name + " Die");
+    }
+    private IEnumerator Dash()
+    {
+        canDash = false;
+        isDashing = true;
+        float originlGravity = rb.gravityScale;
+        rb.gravityScale = 0f;
+        rb.linearVelocity = new Vector2(transform.localScale.x * dashingPower * (facingRight ? 1 : -1), 0f);
+        tr.emitting = true;
+        yield return new WaitForSeconds(dashingTime);
+        tr.emitting = false;
+        rb.gravityScale = originlGravity;
+        isDashing = false;
+        yield return new WaitForSeconds(dashingCooldown);
+        canDash = true;
     }
 }
