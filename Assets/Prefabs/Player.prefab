@@ -117,7 +117,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!61 &3496324242168618672
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -181,6 +181,14 @@ MonoBehaviour:
   jumpHeight: 5
   isGround: 1
   moveSpeed: 5
+  comboResetTime: 1
+  attackPoint: {fileID: 0}
+  attackRadius: 1.5
+  targetLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  maxHealth: 10
+  tr: {fileID: 0}
 --- !u!95 &9029970957257907770
 Animator:
   serializedVersion: 7

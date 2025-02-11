@@ -178,15 +178,22 @@ public class Player : MonoBehaviour
     {
         canDash = false;
         isDashing = true;
-        float originlGravity = rb.gravityScale;
+        float originalGravity = rb.gravityScale;
         rb.gravityScale = 0f;
-        rb.linearVelocity = new Vector2(transform.localScale.x * dashingPower * (facingRight ? 1 : -1), 0f);
         tr.emitting = true;
+
+        Vector2 dashVelocity = new Vector2(transform.localScale.x * dashingPower * (facingRight ? 1 : -1), 0f);
+        rb.linearVelocity = dashVelocity;
+
         yield return new WaitForSeconds(dashingTime);
+
+        rb.linearVelocity = Vector2.zero;
         tr.emitting = false;
-        rb.gravityScale = originlGravity;
+        rb.gravityScale = originalGravity;
         isDashing = false;
+
         yield return new WaitForSeconds(dashingCooldown);
         canDash = true;
     }
+
 }
