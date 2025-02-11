@@ -40,8 +40,26 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: 3
+    uniqueID: 1031248385
+    locked: 0
+  - name: 2
+    uniqueID: 1797403177
+    locked: 0
+  - name: 1
+    uniqueID: 1289308747
+    locked: 0
+  - name: Tree
+    uniqueID: 540112417
+    locked: 0
+  - name: BackTiles
+    uniqueID: 901612771
+    locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: GroundTile
+    uniqueID: 3801932591
     locked: 0
   m_RenderingLayers:
   - Default
