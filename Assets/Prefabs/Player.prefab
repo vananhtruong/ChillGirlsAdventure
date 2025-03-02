@@ -190,6 +190,10 @@ MonoBehaviour:
     m_Bits: 64
   maxHealth: 10
   tr: {fileID: 3807102927365490266}
+  jumpSound: {fileID: 8300000, guid: f944bddb60e210c40be39a12a9bc0010, type: 3}
+  attackSound: {fileID: 8300000, guid: 34ec34246d5e77848a562b6c3a8a73fe, type: 3}
+  dashSound: {fileID: 8300000, guid: bbe83c86cc5c1ef4b90719fee8ffb71a, type: 3}
+  hurtSound: {fileID: 8300000, guid: 1857663727ea3f5429f56777016e375d, type: 3}
 --- !u!95 &8475461233263113414
 Animator:
   serializedVersion: 7
