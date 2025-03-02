@@ -1,4 +1,4 @@
-using Unity.VisualScripting;
+﻿using Unity.VisualScripting;
 using UnityEngine;
 using System.Collections;
 
@@ -8,14 +8,10 @@ public class Player : MonoBehaviour
     public Rigidbody2D rb;
 
     public float jumpHeight = 1f;
-    public bool isGround = true;
+    public bool isGround = false;
     private float movement;
     public float moveSpeed = 5f;
     private bool facingRight = true;
-
-    private int comboStep = 0;
-    private Coroutine comboCoroutine;
-    public float comboResetTime = 1f;
 
     public Transform attackPoint;
     public float attackRadius = 1.5f;
@@ -31,8 +27,25 @@ public class Player : MonoBehaviour
 
     [SerializeField] private TrailRenderer tr;
 
+    // Thêm biến để đếm số lần nhảy
+    private int jumpCount = 0;
+
+    // Thêm các biến âm thanh
+    private AudioSource audioSource;
+    [SerializeField] private AudioClip jumpSound;    // Âm thanh khi nhảy
+    [SerializeField] private AudioClip attackSound;  // Âm thanh khi tấn công
+    [SerializeField] private AudioClip dashSound;    // Âm thanh khi dash
+    [SerializeField] private AudioClip hurtSound;    // Âm thanh khi bị thương
+
     void Start()
     {
+        // Lấy component AudioSource
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+            // Nếu chưa có AudioSource, thêm mới
+            audioSource = gameObject.AddComponent<AudioSource>();
+        }
     }
 
     void Update()
@@ -49,25 +62,39 @@ public class Player : MonoBehaviour
             facingRight = true;
         }
 
-        if (Input.GetKey(KeyCode.Space) && isGround)
+        animator.SetBool("Grounded", isGround);
+        animator.SetBool("Jump", !isGround && rb.linearVelocity.y > 0);
+
+        if (Input.GetKeyDown(KeyCode.Space) && jumpCount < 2)
         {
             Jump();
-            isGround = false;
-            animator.SetBool("Jump", true);
         }
 
-        if (Mathf.Abs(movement) > 0f)
+        // Kiểm tra nút Q để nhận damage (tạm thời)
+        if (Input.GetKeyDown(KeyCode.Q))
         {
-            animator.SetFloat("Run", 1f);
+            PlayerTakeDamage(1);
         }
-        else
+
+        // Kiểm tra giữ chuột phải để kích hoạt Shield
+        if (Input.GetMouseButtonDown(1)) // Chuột phải được nhấn
         {
-            animator.SetFloat("Run", 0f);
+            animator.SetTrigger("Shield"); // Kích hoạt trigger Shield
+            animator.SetBool("IdeShield", true);
         }
+
+        // Kiểm tra thả chuột phải để set IdleShield = false
+        if (Input.GetMouseButtonUp(1)) // Chuột phải được thả
+        {
+            animator.SetBool("IdeShield", false); // Đặt IdleShield thành false
+        }
+
+        animator.SetFloat("Run", Mathf.Abs(movement));
 
         Attack();
         if (maxHealth <= 0)
         {
+            Die();
         }
         if (isDashing)
         {
@@ -83,40 +110,12 @@ public class Player : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            if (comboCoroutine != null)
+            animator.SetTrigger("Attack");
+            if (attackSound != null)
             {
-                StopCoroutine(comboCoroutine);
+                audioSource.PlayOneShot(attackSound);
             }
-            comboStep++;
-            if (comboStep > 4)
-            {
-                comboStep = 1;
-            }
-
-            switch (comboStep)
-            {
-                case 1:
-                    animator.SetTrigger("Attack");
-                    break;
-                case 2:
-                    animator.SetTrigger("Attack1");
-                    break;
-                case 3:
-                    animator.SetTrigger("Attack2");
-                    break;
-                case 4:
-                    animator.SetTrigger("Attack3");
-                    break;
-            }
-
-            comboCoroutine = StartCoroutine(ResetCombo());
         }
-    }
-
-    private IEnumerator ResetCombo()
-    {
-        yield return new WaitForSeconds(comboResetTime);
-        comboStep = 0;
     }
 
     private void FixedUpdate()
@@ -130,18 +129,37 @@ public class Player : MonoBehaviour
 
     void Jump()
     {
+        rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
         rb.AddForce(new Vector2(0f, jumpHeight), ForceMode2D.Impulse);
+        isGround = false;
+        jumpCount++;
+
+        if (jumpSound != null)
+        {
+            audioSource.PlayOneShot(jumpSound);
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        Debug.Log(collision.gameObject.name);
-        if (collision.gameObject.tag == "Ground")
+        Debug.Log("Va chạm với: " + collision.gameObject.name);
+        if (collision.gameObject.CompareTag("Ground"))
         {
             isGround = true;
-            animator.SetBool("Jump", false);
+            jumpCount = 0;
         }
     }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, 0.1f, LayerMask.GetMask("Ground"));
+            isGround = hits.Length > 0;
+            animator.SetBool("Grounded", isGround);
+        }
+    }
+
     public void PlayerAttack()
     {
         Collider2D hitInfo = Physics2D.OverlapCircle(attackPoint.position, attackRadius, targetLayer);
@@ -153,6 +171,7 @@ public class Player : MonoBehaviour
             }
         }
     }
+
     private void OnDrawGizmosSelected()
     {
         if (attackPoint == null)
@@ -161,7 +180,10 @@ public class Player : MonoBehaviour
         }
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(attackPoint.position, attackRadius);
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, 0.1f);
     }
+
     public void PlayerTakeDamage(int damage)
     {
         if (maxHealth <= 0)
@@ -169,11 +191,19 @@ public class Player : MonoBehaviour
             return;
         }
         maxHealth -= damage;
+        animator.SetTrigger("Hurt");
+        if (hurtSound != null)
+        {
+            audioSource.PlayOneShot(hurtSound);
+        }
     }
+
     void Die()
     {
         Debug.Log(this.transform.name + " Die");
+        animator.SetTrigger("Die");
     }
+
     private IEnumerator Dash()
     {
         canDash = false;
@@ -181,6 +211,12 @@ public class Player : MonoBehaviour
         float originalGravity = rb.gravityScale;
         rb.gravityScale = 0f;
         tr.emitting = true;
+        animator.SetTrigger("Dash");
+
+        if (dashSound != null)
+        {
+            audioSource.PlayOneShot(dashSound);
+        }
 
         Vector2 dashVelocity = new Vector2(transform.localScale.x * dashingPower * (facingRight ? 1 : -1), 0f);
         rb.linearVelocity = dashVelocity;
@@ -195,5 +231,4 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(dashingCooldown);
         canDash = true;
     }
-
 }
