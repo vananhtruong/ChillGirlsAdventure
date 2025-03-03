@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 
 public class Health : MonoBehaviour
@@ -13,12 +13,24 @@ public class Health : MonoBehaviour
     [SerializeField] private float iFramesDuration;
     [SerializeField] private int numberOfFlashes;
     private SpriteRenderer spriteRend;
+    private Color originalColor;
+    public float flashDuration = 0.5f;
+
+    [Header("Spawn Settings")]
+    public GameObject botPrefab; // Prefab của bot
+    public float respawnDelay = 2f; // Thời gian delay spawn
+
 
     private void Awake()
     {
         currentHealth = startingHealth;
         anim = GetComponent<Animator>();
         spriteRend = GetComponent<SpriteRenderer>();
+        if (spriteRend != null)
+        {
+            originalColor = spriteRend.color;
+        }
+        botPrefab=gameObject;
     }
 
     public void TakeDamage(float _damage)
@@ -26,7 +38,11 @@ public class Health : MonoBehaviour
         currentHealth = Mathf.Clamp(currentHealth - _damage, 0, startingHealth);
         if (currentHealth > 0)
         {
-            anim.SetTrigger("hurt");
+            if (anim != null && anim.HasState(0, Animator.StringToHash("hurt")))
+            {
+                anim.SetTrigger("hurt");
+            }
+            StartCoroutine(FlashRed());
         }
         else
         {
@@ -35,15 +51,16 @@ public class Health : MonoBehaviour
                 anim.SetTrigger("die");
                 //GetComponent<PlayerMovement>().enabled = false;
                 dead = true;
-                StartCoroutine(DisappearAfterDie());
+                StartCoroutine(DisappearAndRespawn());
+                //StartCoroutine(DisappearAfterDie());
             }
         }
     }
 
-    public void AddHealth(float _value)
-    {
-        currentHealth = Mathf.Clamp(currentHealth + _value, 0, startingHealth);
-    }
+    //public void AddHealth(float _value)
+    //{
+    //    currentHealth = Mathf.Clamp(currentHealth + _value, 0, startingHealth);
+    //}
 
     private IEnumerator DisappearAfterDie()
     {
@@ -55,5 +72,39 @@ public class Health : MonoBehaviour
         // Deactivate or destroy the GameObject
         gameObject.SetActive(false);
         // Or: Destroy(gameObject);
+    }
+    private IEnumerator FlashRed()
+    {
+        spriteRend.color = Color.red;
+        yield return new WaitForSeconds(flashDuration);
+        spriteRend.color = originalColor;
+    }
+    private IEnumerator DisappearAndRespawn()
+    {
+        Vector3 deathPosition = transform.position; // Lưu lại vị trí bot chết
+        Quaternion deathRotation = transform.rotation; // Lưu lại hướng quay của bot
+
+        Debug.Log("Bot Prefab day ne: " + (botPrefab != null ? botPrefab.name : "NULL"));
+        Debug.Log("Bot deathPosition day ne: " + deathPosition);
+        Debug.Log("Bot deathRotation day ne: " + deathRotation);
+
+        // Spawn bot mới ở vị trí cũ
+        if (botPrefab != null)
+        {
+
+            Debug.Log("Spawn bot mới sau " + respawnDelay + " giây...");
+            yield return new WaitForSeconds(respawnDelay);
+            try
+            {
+                GameObject newBot = Instantiate(botPrefab, deathPosition, deathRotation);
+                Debug.Log("Bot mới đã spawn thành công tại: " + deathPosition);
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError("Lỗi khi Instantiate: " + e.Message);
+            }
+
+            Destroy(gameObject);
+        }
     }
 }
