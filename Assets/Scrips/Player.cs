@@ -1,11 +1,13 @@
 ﻿using Unity.VisualScripting;
 using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
     public Animator animator;
     public Rigidbody2D rb;
+    public CharacterControllerManager controllerManager; // Thêm tham chiếu đến manager
 
     public float jumpHeight = 1f;
     public bool isGround = false;
@@ -26,30 +28,34 @@ public class Player : MonoBehaviour
     private float dashingCooldown = 1f;
 
     [SerializeField] private TrailRenderer tr;
+    //background
+    private PolygonCollider2D backgroundCollider;
+    //collection
+    public int currentTao = 0;
+    public Text TextHeart;
 
-    // Thêm biến để đếm số lần nhảy
     private int jumpCount = 0;
 
-    // Thêm các biến âm thanh
     private AudioSource audioSource;
-    [SerializeField] private AudioClip jumpSound;    // Âm thanh khi nhảy
-    [SerializeField] private AudioClip attackSound;  // Âm thanh khi tấn công
-    [SerializeField] private AudioClip dashSound;    // Âm thanh khi dash
-    [SerializeField] private AudioClip hurtSound;    // Âm thanh khi bị thương
+    [SerializeField] private AudioClip jumpSound;
+    [SerializeField] private AudioClip attackSound;
+    [SerializeField] private AudioClip dashSound;
+    [SerializeField] private AudioClip hurtSound;
 
     void Start()
     {
-        // Lấy component AudioSource
         audioSource = GetComponent<AudioSource>();
         if (audioSource == null)
         {
-            // Nếu chưa có AudioSource, thêm mới
             audioSource = gameObject.AddComponent<AudioSource>();
         }
     }
 
     void Update()
     {
+        if (!enabled) return; // Chỉ chạy khi component được bật
+
+        TextHeart.text = currentTao.ToString();
         movement = Input.GetAxis("Horizontal");
         if (movement < 0f && facingRight)
         {
@@ -70,23 +76,20 @@ public class Player : MonoBehaviour
             Jump();
         }
 
-        // Kiểm tra nút Q để nhận damage (tạm thời)
         if (Input.GetKeyDown(KeyCode.Q))
         {
             PlayerTakeDamage(1);
         }
 
-        // Kiểm tra giữ chuột phải để kích hoạt Shield
-        if (Input.GetMouseButtonDown(1)) // Chuột phải được nhấn
+        if (Input.GetMouseButtonDown(1))
         {
-            animator.SetTrigger("Shield"); // Kích hoạt trigger Shield
+            animator.SetTrigger("Shield");
             animator.SetBool("IdeShield", true);
         }
 
-        // Kiểm tra thả chuột phải để set IdleShield = false
-        if (Input.GetMouseButtonUp(1)) // Chuột phải được thả
+        if (Input.GetMouseButtonUp(1))
         {
-            animator.SetBool("IdeShield", false); // Đặt IdleShield thành false
+            animator.SetBool("IdeShield", false);
         }
 
         animator.SetFloat("Run", Mathf.Abs(movement));
@@ -120,6 +123,8 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (!enabled) return; // Chỉ chạy khi component được bật
+
         transform.position += new Vector3(movement, 0f, 0f) * Time.fixedDeltaTime * moveSpeed;
         if (isDashing)
         {
@@ -230,5 +235,47 @@ public class Player : MonoBehaviour
 
         yield return new WaitForSeconds(dashingCooldown);
         canDash = true;
+    }
+
+    //huong
+    public static float Clamp(float value, float min, float max)
+    {
+        if (value < min)
+        {
+            value = min;
+        }
+        else if (value > max)
+        {
+            value = max;
+        }
+
+        return value;
+    }
+    private void ClampOnBackground()
+    {
+        if (backgroundCollider == null)
+        {
+            backgroundCollider = GameObject.FindWithTag("Background")?.GetComponent<PolygonCollider2D>();
+            if (backgroundCollider == null) return;
+        }
+        // get limit
+        Bounds bounds = backgroundCollider.bounds;
+
+        Vector3 pos = transform.position;
+        pos.x = Mathf.Clamp(pos.x, bounds.min.x, bounds.max.x);
+        pos.y = Mathf.Clamp(pos.y, bounds.min.y, bounds.max.y);
+
+        transform.position = pos;
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if(other.gameObject.tag == "TaoCollect")
+        {
+            currentTao++;
+            other.gameObject.transform.GetChild(0).GetComponent<Animator>().SetTrigger("Collect");
+            Destroy(other.gameObject, 1f);
+            Debug.Log(other.gameObject.tag + "collected");
+        }
     }
 }
