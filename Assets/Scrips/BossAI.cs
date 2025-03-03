@@ -42,11 +42,11 @@ public class BossAI : MonoBehaviour
         HandleState();
     }
 
-    private void OnMouseDown()
-    {
+    //private void OnMouseDown()
+    //{
         
-        TakeDamage(50);
-    }
+    //    TakeDamage(50);
+    //}
     public void ChangeState(BossState newState)
     {
         if (currentState != newState)

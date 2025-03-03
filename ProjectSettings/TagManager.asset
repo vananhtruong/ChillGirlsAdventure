@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Ground
   - enemy
+  - Background
+  - TaoCollect
   layers:
   - Default
   - TransparentFX
@@ -52,8 +54,8 @@ TagManager:
   - name: Tree
     uniqueID: 540112417
     locked: 0
-  - name: BackTiles
-    uniqueID: 901612771
+  - name: Decor
+    uniqueID: 4156236839
     locked: 0
   - name: Default
     uniqueID: 0

@@ -1,21 +1,19 @@
-using Unity.VisualScripting;
+﻿using Unity.VisualScripting;
 using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
     public Animator animator;
     public Rigidbody2D rb;
+    public CharacterControllerManager controllerManager; // Thêm tham chiếu đến manager
 
     public float jumpHeight = 1f;
-    public bool isGround = true;
+    public bool isGround = false;
     private float movement;
     public float moveSpeed = 5f;
     private bool facingRight = true;
-
-    private int comboStep = 0;
-    private Coroutine comboCoroutine;
-    public float comboResetTime = 1f;
 
     public Transform attackPoint;
     public float attackRadius = 1.5f;
@@ -31,12 +29,37 @@ public class Player : MonoBehaviour
 
     [SerializeField] private TrailRenderer tr;
 
+    private int jumpCount = 0;
+
+    //background
+    private PolygonCollider2D backgroundCollider;
+    //collection
+    public int currentTao = 0;
+    public Text TextHeart;
+
+    private AudioSource audioSource;
+    [SerializeField] private AudioClip jumpSound;
+    [SerializeField] private AudioClip attackSound;
+    [SerializeField] private AudioClip dashSound;
+    [SerializeField] private AudioClip hurtSound;
+
+    
+
     void Start()
     {
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+        }
+        currentTao = maxHealth;
     }
 
     void Update()
     {
+        TextHeart.text = currentTao.ToString();
+        if (!enabled) return; // Chỉ chạy khi component được bật
+
         movement = Input.GetAxis("Horizontal");
         if (movement < 0f && facingRight)
         {
@@ -49,25 +72,36 @@ public class Player : MonoBehaviour
             facingRight = true;
         }
 
-        if (Input.GetKey(KeyCode.Space) && isGround)
+        animator.SetBool("Grounded", isGround);
+        animator.SetBool("Jump", !isGround && rb.linearVelocity.y > 0);
+
+        if (Input.GetKeyDown(KeyCode.Space) && jumpCount < 2)
         {
             Jump();
-            isGround = false;
-            animator.SetBool("Jump", true);
         }
 
-        if (Mathf.Abs(movement) > 0f)
+        if (Input.GetKeyDown(KeyCode.Q))
         {
-            animator.SetFloat("Run", 1f);
+            PlayerTakeDamage(1);
         }
-        else
+
+        if (Input.GetMouseButtonDown(1))
         {
-            animator.SetFloat("Run", 0f);
+            animator.SetTrigger("Shield");
+            animator.SetBool("IdeShield", true);
         }
+
+        if (Input.GetMouseButtonUp(1))
+        {
+            animator.SetBool("IdeShield", false);
+        }
+
+        animator.SetFloat("Run", Mathf.Abs(movement));
 
         Attack();
         if (maxHealth <= 0)
         {
+            Die();
         }
         if (isDashing)
         {
@@ -83,44 +117,20 @@ public class Player : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            if (comboCoroutine != null)
+            animator.SetTrigger("Attack"); 
+            PlayerAttack();
+            PlayerAttackBoss();
+            if (attackSound != null)
             {
-                StopCoroutine(comboCoroutine);
+                audioSource.PlayOneShot(attackSound);
             }
-            comboStep++;
-            if (comboStep > 4)
-            {
-                comboStep = 1;
-            }
-
-            switch (comboStep)
-            {
-                case 1:
-                    animator.SetTrigger("Attack");
-                    break;
-                case 2:
-                    animator.SetTrigger("Attack1");
-                    break;
-                case 3:
-                    animator.SetTrigger("Attack2");
-                    break;
-                case 4:
-                    animator.SetTrigger("Attack3");
-                    break;
-            }
-
-            comboCoroutine = StartCoroutine(ResetCombo());
         }
-    }
-
-    private IEnumerator ResetCombo()
-    {
-        yield return new WaitForSeconds(comboResetTime);
-        comboStep = 0;
     }
 
     private void FixedUpdate()
     {
+        if (!enabled) return; // Chỉ chạy khi component được bật
+
         transform.position += new Vector3(movement, 0f, 0f) * Time.fixedDeltaTime * moveSpeed;
         if (isDashing)
         {
@@ -130,18 +140,45 @@ public class Player : MonoBehaviour
 
     void Jump()
     {
+        rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
         rb.AddForce(new Vector2(0f, jumpHeight), ForceMode2D.Impulse);
+        isGround = false;
+        jumpCount++;
+
+        if (jumpSound != null)
+        {
+            audioSource.PlayOneShot(jumpSound);
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        Debug.Log(collision.gameObject.name);
-        if (collision.gameObject.tag == "Ground")
+        Debug.Log("Va chạm với: " + collision.gameObject.name);
+        if (collision.gameObject.CompareTag("Ground"))
         {
             isGround = true;
-            animator.SetBool("Jump", false);
+            jumpCount = 0;
+        }
+        if (collision.gameObject.tag == "TaoCollect")
+        {
+            currentTao++;
+            maxHealth++;
+            collision.gameObject.transform.GetChild(0).GetComponent<Animator>().SetTrigger("Collect");
+            Destroy(collision.gameObject, 1f);
+            Debug.Log(collision.gameObject.tag + "collected");
         }
     }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, 0.1f, LayerMask.GetMask("Ground"));
+            isGround = hits.Length > 0;
+            animator.SetBool("Grounded", isGround);
+        }
+    }
+
     public void PlayerAttack()
     {
         Collider2D hitInfo = Physics2D.OverlapCircle(attackPoint.position, attackRadius, targetLayer);
@@ -149,10 +186,25 @@ public class Player : MonoBehaviour
         {
             if (hitInfo.GetComponent<Health>() != null)
             {
+                Debug.Log("We hit " + hitInfo.name);
                 hitInfo.GetComponent<Health>().TakeDamage(1);
             }
         }
     }
+    public void PlayerAttackBoss()
+    {
+        Collider2D hitInfo = Physics2D.OverlapCircle(attackPoint.position, attackRadius, targetLayer);
+        if (hitInfo)
+        {
+            if (hitInfo.GetComponent<BossAI>() != null)
+            {
+                Debug.Log("We hit " + hitInfo.name);
+                hitInfo.GetComponent<BossAI>().TakeDamage(50);
+            }
+            
+        }
+    }
+
     private void OnDrawGizmosSelected()
     {
         if (attackPoint == null)
@@ -161,7 +213,10 @@ public class Player : MonoBehaviour
         }
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(attackPoint.position, attackRadius);
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, 0.1f);
     }
+
     public void PlayerTakeDamage(int damage)
     {
         if (maxHealth <= 0)
@@ -169,11 +224,20 @@ public class Player : MonoBehaviour
             return;
         }
         maxHealth -= damage;
+        currentTao -= damage;
+        animator.SetTrigger("Hurt");
+        if (hurtSound != null)
+        {
+            audioSource.PlayOneShot(hurtSound);
+        }
     }
+
     void Die()
     {
         Debug.Log(this.transform.name + " Die");
+        animator.SetTrigger("Die");
     }
+
     private IEnumerator Dash()
     {
         canDash = false;
@@ -181,6 +245,12 @@ public class Player : MonoBehaviour
         float originalGravity = rb.gravityScale;
         rb.gravityScale = 0f;
         tr.emitting = true;
+        animator.SetTrigger("Dash");
+
+        if (dashSound != null)
+        {
+            audioSource.PlayOneShot(dashSound);
+        }
 
         Vector2 dashVelocity = new Vector2(transform.localScale.x * dashingPower * (facingRight ? 1 : -1), 0f);
         rb.linearVelocity = dashVelocity;
@@ -195,5 +265,45 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(dashingCooldown);
         canDash = true;
     }
+    public static float Clamp(float value, float min, float max)
+    {
+        if (value < min)
+        {
+            value = min;
+        }
+        else if (value > max)
+        {
+            value = max;
+        }
 
+        return value;
+    }
+    private void ClampOnBackground()
+    {
+        if (backgroundCollider == null)
+        {
+            backgroundCollider = GameObject.FindWithTag("Background")?.GetComponent<PolygonCollider2D>();
+            if (backgroundCollider == null) return;
+        }
+        // get limit
+        Bounds bounds = backgroundCollider.bounds;
+
+        Vector3 pos = transform.position;
+        pos.x = Mathf.Clamp(pos.x, bounds.min.x, bounds.max.x);
+        pos.y = Mathf.Clamp(pos.y, bounds.min.y, bounds.max.y);
+
+        transform.position = pos;
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.tag == "TaoCollect")
+        {
+            currentTao++;
+            maxHealth++;
+            other.gameObject.transform.GetChild(0).GetComponent<Animator>().SetTrigger("Collect");
+            Destroy(other.gameObject, 1f);
+            Debug.Log(other.gameObject.tag + "collected");
+        }
+    }
 }
