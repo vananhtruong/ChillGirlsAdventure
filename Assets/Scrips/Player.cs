@@ -117,7 +117,7 @@ public class Player : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            animator.SetTrigger("Attack");
+            animator.SetTrigger("Attack"); PlayerAttack();
             if (attackSound != null)
             {
                 audioSource.PlayOneShot(attackSound);
@@ -184,6 +184,7 @@ public class Player : MonoBehaviour
         {
             if (hitInfo.GetComponent<Health>() != null)
             {
+                Debug.Log("We hit " + hitInfo.name);
                 hitInfo.GetComponent<Health>().TakeDamage(1);
             }
         }
