@@ -1,6 +1,7 @@
 using Unity.VisualScripting;
 using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -30,6 +31,11 @@ public class Player : MonoBehaviour
     private float dashingCooldown = 1f;
 
     [SerializeField] private TrailRenderer tr;
+    //background
+    private PolygonCollider2D backgroundCollider;
+    //collection
+    public int currentTao = 0;
+    public Text TextHeart;
 
     void Start()
     {
@@ -37,6 +43,7 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        TextHeart.text = currentTao.ToString();
         movement = Input.GetAxis("Horizontal");
         if (movement < 0f && facingRight)
         {
@@ -188,5 +195,47 @@ public class Player : MonoBehaviour
         isDashing = false;
         yield return new WaitForSeconds(dashingCooldown);
         canDash = true;
+    }
+
+    //huong
+    public static float Clamp(float value, float min, float max)
+    {
+        if (value < min)
+        {
+            value = min;
+        }
+        else if (value > max)
+        {
+            value = max;
+        }
+
+        return value;
+    }
+    private void ClampOnBackground()
+    {
+        if (backgroundCollider == null)
+        {
+            backgroundCollider = GameObject.FindWithTag("Background")?.GetComponent<PolygonCollider2D>();
+            if (backgroundCollider == null) return;
+        }
+        // get limit
+        Bounds bounds = backgroundCollider.bounds;
+
+        Vector3 pos = transform.position;
+        pos.x = Mathf.Clamp(pos.x, bounds.min.x, bounds.max.x);
+        pos.y = Mathf.Clamp(pos.y, bounds.min.y, bounds.max.y);
+
+        transform.position = pos;
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if(other.gameObject.tag == "TaoCollect")
+        {
+            currentTao++;
+            other.gameObject.transform.GetChild(0).GetComponent<Animator>().SetTrigger("Collect");
+            Destroy(other.gameObject, 1f);
+            Debug.Log(other.gameObject.tag + "collected");
+        }
     }
 }
