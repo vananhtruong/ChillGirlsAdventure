@@ -33,7 +33,7 @@ public class Health : MonoBehaviour
         botPrefab=gameObject;
     }
 
-    public void TakeDamage(float _damage)
+    public IEnumerator TakeDamage(float _damage)
     {
         currentHealth = Mathf.Clamp(currentHealth - _damage, 0, startingHealth);
         if (currentHealth > 0)
@@ -49,10 +49,10 @@ public class Health : MonoBehaviour
             if (!dead)
             {
                 anim.SetTrigger("die");
-                //GetComponent<PlayerMovement>().enabled = false;
+                yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length);
+                gameObject.SetActive(false);
                 dead = true;
                 StartCoroutine(DisappearAndRespawn());
-                //StartCoroutine(DisappearAfterDie());
             }
         }
     }
@@ -104,7 +104,7 @@ public class Health : MonoBehaviour
                 Debug.LogError("Lỗi khi Instantiate: " + e.Message);
             }
 
-            Destroy(gameObject);
+            
         }
     }
 }
