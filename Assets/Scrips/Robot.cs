@@ -2,8 +2,8 @@
 
 public class Robot : MonoBehaviour
 {
-    [SerializeField] private float moveSpeed = 5f;    // Tốc độ di chuyển trái phải
-    [SerializeField] private float flySpeed = 2f;     // Tốc độ bay lên
+    [SerializeField] private float moveSpeed = 5f;
+    [SerializeField] private float flySpeed = 2f;
     private Rigidbody2D rb;
     private float horizontalInput;
     private Vector3 originalScale;
@@ -15,7 +15,8 @@ public class Robot : MonoBehaviour
     public float timeBetweenFiring = 0.5f;
     public GameObject bullet;
     public Transform bulletTransform;
-    private Animator animator;                        // Tham chiếu đến Animator
+    private Animator animator;
+    public CharacterControllerManager controllerManager; // Thêm tham chiếu đến manager
 
     void Start()
     {
@@ -23,11 +24,13 @@ public class Robot : MonoBehaviour
         rb.gravityScale = 0.7f;
         originalScale = transform.localScale;
         mainCamera = Camera.main;
-        animator = GetComponent<Animator>();          // Lấy Animator component
+        animator = GetComponent<Animator>();
     }
 
     void Update()
     {
+        if (!enabled) return; // Chỉ chạy khi component được bật
+
         horizontalInput = Input.GetAxisRaw("Horizontal");
         MoveHorizontal();
 
@@ -53,9 +56,7 @@ public class Robot : MonoBehaviour
         if (Input.GetMouseButton(0) && canFire)
         {
             canFire = false;
-            // Kích hoạt trigger Shoot
             animator.SetTrigger("Shoot");
-            // Đảm bảo đạn xuất hiện tại vị trí bulletTransform và theo hướng của robot
             GameObject newBullet = Instantiate(bullet, bulletTransform.position, transform.rotation);
             newBullet.GetComponent<BulletScrip>().SetDirection(mousePos);
         }

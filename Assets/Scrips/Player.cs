@@ -6,6 +6,7 @@ public class Player : MonoBehaviour
 {
     public Animator animator;
     public Rigidbody2D rb;
+    public CharacterControllerManager controllerManager; // Thêm tham chiếu đến manager
 
     public float jumpHeight = 1f;
     public bool isGround = false;
@@ -27,29 +28,27 @@ public class Player : MonoBehaviour
 
     [SerializeField] private TrailRenderer tr;
 
-    // Thêm biến để đếm số lần nhảy
     private int jumpCount = 0;
 
-    // Thêm các biến âm thanh
     private AudioSource audioSource;
-    [SerializeField] private AudioClip jumpSound;    // Âm thanh khi nhảy
-    [SerializeField] private AudioClip attackSound;  // Âm thanh khi tấn công
-    [SerializeField] private AudioClip dashSound;    // Âm thanh khi dash
-    [SerializeField] private AudioClip hurtSound;    // Âm thanh khi bị thương
+    [SerializeField] private AudioClip jumpSound;
+    [SerializeField] private AudioClip attackSound;
+    [SerializeField] private AudioClip dashSound;
+    [SerializeField] private AudioClip hurtSound;
 
     void Start()
     {
-        // Lấy component AudioSource
         audioSource = GetComponent<AudioSource>();
         if (audioSource == null)
         {
-            // Nếu chưa có AudioSource, thêm mới
             audioSource = gameObject.AddComponent<AudioSource>();
         }
     }
 
     void Update()
     {
+        if (!enabled) return; // Chỉ chạy khi component được bật
+
         movement = Input.GetAxis("Horizontal");
         if (movement < 0f && facingRight)
         {
@@ -70,23 +69,20 @@ public class Player : MonoBehaviour
             Jump();
         }
 
-        // Kiểm tra nút Q để nhận damage (tạm thời)
         if (Input.GetKeyDown(KeyCode.Q))
         {
             PlayerTakeDamage(1);
         }
 
-        // Kiểm tra giữ chuột phải để kích hoạt Shield
-        if (Input.GetMouseButtonDown(1)) // Chuột phải được nhấn
+        if (Input.GetMouseButtonDown(1))
         {
-            animator.SetTrigger("Shield"); // Kích hoạt trigger Shield
+            animator.SetTrigger("Shield");
             animator.SetBool("IdeShield", true);
         }
 
-        // Kiểm tra thả chuột phải để set IdleShield = false
-        if (Input.GetMouseButtonUp(1)) // Chuột phải được thả
+        if (Input.GetMouseButtonUp(1))
         {
-            animator.SetBool("IdeShield", false); // Đặt IdleShield thành false
+            animator.SetBool("IdeShield", false);
         }
 
         animator.SetFloat("Run", Mathf.Abs(movement));
@@ -120,6 +116,8 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (!enabled) return; // Chỉ chạy khi component được bật
+
         transform.position += new Vector3(movement, 0f, 0f) * Time.fixedDeltaTime * moveSpeed;
         if (isDashing)
         {
