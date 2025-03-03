@@ -13068,6 +13068,18 @@ PrefabInstance:
       propertyPath: m_Constraints
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 1929800755360420851, guid: c2b9679de4cd6424293f28eec9693e9e, type: 3}
+      propertyPath: m_BodyType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2321269242898588928, guid: c2b9679de4cd6424293f28eec9693e9e, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2619113246952261211, guid: c2b9679de4cd6424293f28eec9693e9e, type: 3}
+      propertyPath: m_Name
+      value: Ground
+      objectReference: {fileID: 0}
     - target: {fileID: 3227201999467575503, guid: c2b9679de4cd6424293f28eec9693e9e, type: 3}
       propertyPath: m_Tiles.Array.size
       value: 0
