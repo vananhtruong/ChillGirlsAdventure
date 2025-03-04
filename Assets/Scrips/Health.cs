@@ -20,6 +20,8 @@ public class Health : MonoBehaviour
     public GameObject botPrefab; // Prefab của bot
     public float respawnDelay = 2f; // Thời gian delay spawn
 
+    private AudioSource audioSource;
+    [SerializeField] private AudioClip enemyHurt;
 
     private void Awake()
     {
@@ -31,6 +33,11 @@ public class Health : MonoBehaviour
             originalColor = spriteRend.color;
         }
         botPrefab=gameObject;
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+        }
     }
 
     public void TakeDamage(float _damage)
@@ -41,6 +48,7 @@ public class Health : MonoBehaviour
         {
             if (anim != null && anim.HasState(0, Animator.StringToHash("hurt")))
             {
+                audioSource.PlayOneShot(enemyHurt);
                 anim.SetTrigger("hurt");
             }
             StartCoroutine(FlashRed());

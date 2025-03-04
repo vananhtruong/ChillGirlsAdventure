@@ -32,7 +32,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -5.11, y: -2.44, z: 0}
-  m_LocalScale: {x: 4.888324, y: 3.636247, z: 1}
+  m_LocalScale: {x: 7.1496625, y: 5.421644, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -126,7 +126,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.023622096, y: -0.08942756}
+  m_Offset: {x: -0.023622096, y: -0.06649213}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -136,7 +136,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.35653543, y: 0.25673956}
+  m_Size: {x: 0.35653543, y: 0.2108687}
   m_EdgeRadius: 0
 --- !u!50 &8068170071455157480
 Rigidbody2D:
@@ -164,7 +164,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!95 &6303384740089450690
 Animator:
   serializedVersion: 7
@@ -200,10 +200,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 2
-  moveDistance: 5
-  attackRange: 2
+  moveDistance: 3
+  attackRange: 3
   attackCooldown: 3
   attackDamge: 2
+  player: {fileID: 0}
   attackRadius: 1
   playerLayer:
     serializedVersion: 2
@@ -221,6 +222,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startingHealth: 3
+  currentHealth: 0
   iFramesDuration: 0
   numberOfFlashes: 0
   flashDuration: 0.2

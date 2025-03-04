@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class EnemyAI : MonoBehaviour
 {
@@ -14,10 +15,12 @@ public class EnemyAI : MonoBehaviour
     private int direction = 1;
     private bool isAttacking = false;
     private float attackTimer = 0f;
-    private Transform player;
+    public Transform player;
 
     public float attackRadius = 4f;
     public LayerMask playerLayer;
+    private AudioSource audioSource;
+    [SerializeField] private AudioClip enemyAtk;
     bool isFlipped = false;
     void Start()
     {
@@ -33,12 +36,16 @@ public class EnemyAI : MonoBehaviour
         {
             Debug.LogError("Không tìm thấy Player! Hãy kiểm tra tag của Player.");
         }
-
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+        }
     }
 
     void Update()
     {
-        LookAtPlayer();
+        
         if (isAttacking)
         {
             attackTimer -= Time.deltaTime;
@@ -54,6 +61,7 @@ public class EnemyAI : MonoBehaviour
 
         if (distanceToPlayer <= attackRange)
         {
+            audioSource.PlayOneShot(enemyAtk);
             Attack();
             //Debug.Log("Khoảng cách đến Player: " + distanceToPlayer);
         }
@@ -81,8 +89,8 @@ public class EnemyAI : MonoBehaviour
         isAttacking = true;
         attackTimer = attackCooldown;
         animator.SetBool("isMoving", false);
+        LookAtPlayer();
         animator.SetTrigger("isAttacking");
-
         StartCoroutine(DealDamage());
         Invoke(nameof(ResetAttack), 0.5f); // Reset lại attack sau animation
     }
