@@ -1,6 +1,7 @@
 ﻿using Unity.VisualScripting;
 using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -30,11 +31,19 @@ public class Player : MonoBehaviour
 
     private int jumpCount = 0;
 
+    //background
+    private PolygonCollider2D backgroundCollider;
+    //collection
+    public int currentTao = 0;
+    public Text TextHeart;
+
     private AudioSource audioSource;
     [SerializeField] private AudioClip jumpSound;
     [SerializeField] private AudioClip attackSound;
     [SerializeField] private AudioClip dashSound;
     [SerializeField] private AudioClip hurtSound;
+
+    private bool isShieldActive = false;
 
     void Start()
     {
@@ -43,10 +52,18 @@ public class Player : MonoBehaviour
         {
             audioSource = gameObject.AddComponent<AudioSource>();
         }
+        currentTao = maxHealth;
     }
 
     void Update()
     {
+
+
+        if (transform.position.y < -12f)
+        {
+            PlayerTakeDamage(maxHealth); // Giảm toàn bộ máu
+        }
+        TextHeart.text = currentTao.ToString();
         if (!enabled) return; // Chỉ chạy khi component được bật
 
         movement = Input.GetAxis("Horizontal");
@@ -76,12 +93,14 @@ public class Player : MonoBehaviour
 
         if (Input.GetMouseButtonDown(1))
         {
+            isShieldActive = true;
             animator.SetTrigger("Shield");
             animator.SetBool("IdeShield", true);
         }
 
         if (Input.GetMouseButtonUp(1))
         {
+            isShieldActive = false;
             animator.SetBool("IdeShield", false);
         }
 
@@ -106,7 +125,9 @@ public class Player : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            animator.SetTrigger("Attack");
+            animator.SetTrigger("Attack"); 
+            PlayerAttack();
+            PlayerAttackBoss();
             if (attackSound != null)
             {
                 audioSource.PlayOneShot(attackSound);
@@ -146,6 +167,14 @@ public class Player : MonoBehaviour
             isGround = true;
             jumpCount = 0;
         }
+        if (collision.gameObject.tag == "TaoCollect")
+        {
+            currentTao++;
+            maxHealth++;
+            collision.gameObject.transform.GetChild(0).GetComponent<Animator>().SetTrigger("Collect");
+            Destroy(collision.gameObject, 1f);
+            Debug.Log(collision.gameObject.tag + "collected");
+        }
     }
 
     private void OnCollisionExit2D(Collision2D collision)
@@ -165,8 +194,22 @@ public class Player : MonoBehaviour
         {
             if (hitInfo.GetComponent<Health>() != null)
             {
+                Debug.Log("We hit " + hitInfo.name);
                 hitInfo.GetComponent<Health>().TakeDamage(1);
             }
+        }
+    }
+    public void PlayerAttackBoss()
+    {
+        Collider2D hitInfo = Physics2D.OverlapCircle(attackPoint.position, attackRadius, targetLayer);
+        if (hitInfo)
+        {
+            if (hitInfo.GetComponent<BossAI>() != null)
+            {
+                Debug.Log("We hit " + hitInfo.name);
+                hitInfo.GetComponent<BossAI>().TakeDamage(50);
+            }
+            
         }
     }
 
@@ -184,11 +227,17 @@ public class Player : MonoBehaviour
 
     public void PlayerTakeDamage(int damage)
     {
+        if (isShieldActive)
+        {
+            Debug.Log("Shield blocked damage!");
+            return;
+        }
         if (maxHealth <= 0)
         {
             return;
         }
         maxHealth -= damage;
+        currentTao -= damage;
         animator.SetTrigger("Hurt");
         if (hurtSound != null)
         {
@@ -200,6 +249,10 @@ public class Player : MonoBehaviour
     {
         Debug.Log(this.transform.name + " Die");
         animator.SetTrigger("Die");
+        rb.linearVelocity = Vector2.zero;
+        GetComponent<Collider2D>().enabled = false;
+        enabled = false;
+        StartCoroutine(DestroyAfterAnimation());
     }
 
     private IEnumerator Dash()
@@ -228,5 +281,52 @@ public class Player : MonoBehaviour
 
         yield return new WaitForSeconds(dashingCooldown);
         canDash = true;
+    }
+    public static float Clamp(float value, float min, float max)
+    {
+        if (value < min)
+        {
+            value = min;
+        }
+        else if (value > max)
+        {
+            value = max;
+        }
+
+        return value;
+    }
+    private void ClampOnBackground()
+    {
+        if (backgroundCollider == null)
+        {
+            backgroundCollider = GameObject.FindWithTag("Background")?.GetComponent<PolygonCollider2D>();
+            if (backgroundCollider == null) return;
+        }
+        // get limit
+        Bounds bounds = backgroundCollider.bounds;
+
+        Vector3 pos = transform.position;
+        pos.x = Mathf.Clamp(pos.x, bounds.min.x, bounds.max.x);
+        pos.y = Mathf.Clamp(pos.y, bounds.min.y, bounds.max.y);
+
+        transform.position = pos;
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.tag == "TaoCollect")
+        {
+            currentTao++;
+            maxHealth++;
+            other.gameObject.transform.GetChild(0).GetComponent<Animator>().SetTrigger("Collect");
+            Destroy(other.gameObject, 1f);
+            Debug.Log(other.gameObject.tag + "collected");
+        }
+    }
+    private IEnumerator DestroyAfterAnimation()
+    {
+        // Chờ 1.5 giây - điều chỉnh thời gian theo animation Die của bạn
+        yield return new WaitForSeconds(1.5f);
+        Destroy(gameObject);
     }
 }
