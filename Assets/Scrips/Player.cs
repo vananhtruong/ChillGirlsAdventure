@@ -43,7 +43,7 @@ public class Player : MonoBehaviour
     [SerializeField] private AudioClip dashSound;
     [SerializeField] private AudioClip hurtSound;
 
-    
+    private bool isShieldActive = false;
 
     void Start()
     {
@@ -57,6 +57,12 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+
+
+        if (transform.position.y < -12f)
+        {
+            PlayerTakeDamage(maxHealth); // Giảm toàn bộ máu
+        }
         TextHeart.text = currentTao.ToString();
         if (!enabled) return; // Chỉ chạy khi component được bật
 
@@ -87,12 +93,14 @@ public class Player : MonoBehaviour
 
         if (Input.GetMouseButtonDown(1))
         {
+            isShieldActive = true;
             animator.SetTrigger("Shield");
             animator.SetBool("IdeShield", true);
         }
 
         if (Input.GetMouseButtonUp(1))
         {
+            isShieldActive = false;
             animator.SetBool("IdeShield", false);
         }
 
@@ -219,6 +227,11 @@ public class Player : MonoBehaviour
 
     public void PlayerTakeDamage(int damage)
     {
+        if (isShieldActive)
+        {
+            Debug.Log("Shield blocked damage!");
+            return;
+        }
         if (maxHealth <= 0)
         {
             return;
@@ -236,6 +249,10 @@ public class Player : MonoBehaviour
     {
         Debug.Log(this.transform.name + " Die");
         animator.SetTrigger("Die");
+        rb.linearVelocity = Vector2.zero;
+        GetComponent<Collider2D>().enabled = false;
+        enabled = false;
+        StartCoroutine(DestroyAfterAnimation());
     }
 
     private IEnumerator Dash()
@@ -305,5 +322,11 @@ public class Player : MonoBehaviour
             Destroy(other.gameObject, 1f);
             Debug.Log(other.gameObject.tag + "collected");
         }
+    }
+    private IEnumerator DestroyAfterAnimation()
+    {
+        // Chờ 1.5 giây - điều chỉnh thời gian theo animation Die của bạn
+        yield return new WaitForSeconds(1.5f);
+        Destroy(gameObject);
     }
 }
