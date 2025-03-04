@@ -329,6 +329,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Golem
       objectReference: {fileID: 0}
+    - target: {fileID: 3559124405032506017, guid: a6c0a686f78b45b45a5093c3a85abe3d, type: 3}
+      propertyPath: enemyHurt
+      value: 
+      objectReference: {fileID: 8300000, guid: 2029172f86b60bd40a7565880b4c40ef, type: 3}
     - target: {fileID: 3801404058229549236, guid: a6c0a686f78b45b45a5093c3a85abe3d, type: 3}
       propertyPath: m_LocalScale.x
       value: 7.1292553
@@ -377,6 +381,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6660234673706479252, guid: a6c0a686f78b45b45a5093c3a85abe3d, type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 1272495115}
+    - target: {fileID: 6660234673706479252, guid: a6c0a686f78b45b45a5093c3a85abe3d, type: 3}
+      propertyPath: enemyAtk
+      value: 
+      objectReference: {fileID: 8300000, guid: 8e7ab391ebce858468844848179a3166, type: 3}
     - target: {fileID: 6660234673706479252, guid: a6c0a686f78b45b45a5093c3a85abe3d, type: 3}
       propertyPath: attackRange
       value: 3
@@ -1299,6 +1311,7 @@ GameObject:
   - component: {fileID: 519420029}
   - component: {fileID: 519420034}
   - component: {fileID: 519420035}
+  - component: {fileID: 519420036}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1456,6 +1469,103 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
   CustomBlends: {fileID: 0}
+--- !u!82 &519420036
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519420028}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 9d3dd03795e945f43bf0504118162a51, type: 3}
+  m_Resource: {fileID: 8300000, guid: 9d3dd03795e945f43bf0504118162a51, type: 3}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 1
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &571730056
 GameObject:
   m_ObjectHideFlags: 0
@@ -2122,6 +2232,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1927478254295757975, guid: f4141e36f5120624a8d25d0b248a95d8, type: 3}
+      propertyPath: enemyHurt
+      value: 
+      objectReference: {fileID: 8300000, guid: 2029172f86b60bd40a7565880b4c40ef, type: 3}
     - target: {fileID: 2340799088896867803, guid: f4141e36f5120624a8d25d0b248a95d8, type: 3}
       propertyPath: m_LocalScale.x
       value: 7.1496625
@@ -2170,10 +2284,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4590866517664077134, guid: f4141e36f5120624a8d25d0b248a95d8, type: 3}
+      propertyPath: m_Size.y
+      value: 0.2108687
+      objectReference: {fileID: 0}
+    - target: {fileID: 4590866517664077134, guid: f4141e36f5120624a8d25d0b248a95d8, type: 3}
+      propertyPath: m_Offset.y
+      value: -0.06649213
+      objectReference: {fileID: 0}
     - target: {fileID: 5311941469826656847, guid: f4141e36f5120624a8d25d0b248a95d8, type: 3}
       propertyPath: m_Name
       value: Crab
       objectReference: {fileID: 0}
+    - target: {fileID: 7723139881395452364, guid: f4141e36f5120624a8d25d0b248a95d8, type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 1272495115}
+    - target: {fileID: 7723139881395452364, guid: f4141e36f5120624a8d25d0b248a95d8, type: 3}
+      propertyPath: enemyAtk
+      value: 
+      objectReference: {fileID: 8300000, guid: 8e7ab391ebce858468844848179a3166, type: 3}
     - target: {fileID: 7723139881395452364, guid: f4141e36f5120624a8d25d0b248a95d8, type: 3}
       propertyPath: attackRange
       value: 3
@@ -2750,6 +2880,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: -4787398300634611803, guid: 1fcd11732e211ca4997b17da7da48eb7, type: 3}
+      propertyPath: enemyHurt
+      value: 
+      objectReference: {fileID: 8300000, guid: 1857663727ea3f5429f56777016e375d, type: 3}
+    - target: {fileID: -4787398300634611803, guid: 1fcd11732e211ca4997b17da7da48eb7, type: 3}
       propertyPath: startingHealth
       value: 5
       objectReference: {fileID: 0}
@@ -2809,6 +2943,14 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 5400cbde25e948f41926f556f71b9c6b, type: 2}
+    - target: {fileID: 8287373969228099219, guid: 1fcd11732e211ca4997b17da7da48eb7, type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 1272495115}
+    - target: {fileID: 8287373969228099219, guid: 1fcd11732e211ca4997b17da7da48eb7, type: 3}
+      propertyPath: enemyAtk
+      value: 
+      objectReference: {fileID: 8300000, guid: 8e7ab391ebce858468844848179a3166, type: 3}
     - target: {fileID: 8287373969228099219, guid: 1fcd11732e211ca4997b17da7da48eb7, type: 3}
       propertyPath: attackRange
       value: 3
@@ -3558,6 +3700,14 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 4234473468427716265, guid: 31dbfae25cd6e9141864d80f86849eb5, type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 1272495115}
+    - target: {fileID: 4234473468427716265, guid: 31dbfae25cd6e9141864d80f86849eb5, type: 3}
+      propertyPath: enemyAtk
+      value: 
+      objectReference: {fileID: 8300000, guid: 8e7ab391ebce858468844848179a3166, type: 3}
+    - target: {fileID: 4234473468427716265, guid: 31dbfae25cd6e9141864d80f86849eb5, type: 3}
       propertyPath: attackRange
       value: 3
       objectReference: {fileID: 0}
@@ -3565,6 +3715,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Rat
       objectReference: {fileID: 0}
+    - target: {fileID: 5902669083002239968, guid: 31dbfae25cd6e9141864d80f86849eb5, type: 3}
+      propertyPath: m_Size.y
+      value: 0.26853326
+      objectReference: {fileID: 0}
+    - target: {fileID: 5902669083002239968, guid: 31dbfae25cd6e9141864d80f86849eb5, type: 3}
+      propertyPath: m_Offset.y
+      value: -0.03416878
+      objectReference: {fileID: 0}
+    - target: {fileID: 6308771881826749254, guid: 31dbfae25cd6e9141864d80f86849eb5, type: 3}
+      propertyPath: enemyHurt
+      value: 
+      objectReference: {fileID: 8300000, guid: 2029172f86b60bd40a7565880b4c40ef, type: 3}
     - target: {fileID: 8614305413409602656, guid: 31dbfae25cd6e9141864d80f86849eb5, type: 3}
       propertyPath: m_LocalScale.x
       value: 11.547245
@@ -3630,6 +3792,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: BlueSlime
       objectReference: {fileID: 0}
+    - target: {fileID: 485064719985608314, guid: 0474df5bfe0e14a41ba63a778eea9693, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 485064719985608314, guid: 0474df5bfe0e14a41ba63a778eea9693, type: 3}
+      propertyPath: m_TagString
+      value: enemy
+      objectReference: {fileID: 0}
     - target: {fileID: 895822083777630416, guid: 0474df5bfe0e14a41ba63a778eea9693, type: 3}
       propertyPath: m_LocalScale.x
       value: 1.1576132
@@ -3678,6 +3848,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1827162288108548424, guid: 0474df5bfe0e14a41ba63a778eea9693, type: 3}
+      propertyPath: enemyHurt
+      value: 
+      objectReference: {fileID: 8300000, guid: 2029172f86b60bd40a7565880b4c40ef, type: 3}
+    - target: {fileID: 8425166420536004513, guid: 0474df5bfe0e14a41ba63a778eea9693, type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 1272495115}
+    - target: {fileID: 8425166420536004513, guid: 0474df5bfe0e14a41ba63a778eea9693, type: 3}
+      propertyPath: enemyAtk
+      value: 
+      objectReference: {fileID: 8300000, guid: 8e7ab391ebce858468844848179a3166, type: 3}
     - target: {fileID: 8425166420536004513, guid: 0474df5bfe0e14a41ba63a778eea9693, type: 3}
       propertyPath: attackRange
       value: 3

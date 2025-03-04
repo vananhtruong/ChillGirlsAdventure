@@ -105,6 +105,9 @@ MonoBehaviour:
   playerLayer:
     serializedVersion: 2
     m_Bits: 64
+  bossLayer:
+    serializedVersion: 2
+    m_Bits: 128
 --- !u!50 &4880470456211380035
 Rigidbody2D:
   serializedVersion: 5

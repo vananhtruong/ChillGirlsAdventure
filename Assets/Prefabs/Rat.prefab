@@ -32,7 +32,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 11.23, y: -2.25, z: 0}
-  m_LocalScale: {x: 5.9529, y: 3.9437, z: 1}
+  m_LocalScale: {x: 11.547245, y: 7.0422187, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -126,7 +126,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.0100468695, y: -0.056871206}
+  m_Offset: {x: -0.0100468695, y: -0.03416878}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -136,7 +136,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.24816716, y: 0.31393814}
+  m_Size: {x: 0.24816716, y: 0.26853326}
   m_EdgeRadius: 0
 --- !u!50 &7960947398532789498
 Rigidbody2D:
@@ -201,9 +201,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 2
   moveDistance: 5
-  attackRange: 2
+  attackRange: 3
   attackCooldown: 2
   attackDamge: 2
+  player: {fileID: 0}
   attackRadius: 2
   playerLayer:
     serializedVersion: 2
@@ -221,6 +222,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startingHealth: 0
+  currentHealth: 0
   iFramesDuration: 10
   numberOfFlashes: 0
   flashDuration: 0.5

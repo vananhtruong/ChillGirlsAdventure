@@ -4,16 +4,17 @@ using UnityEngine;
 public class BulletScrip : MonoBehaviour
 {
     private Rigidbody2D rb;
-    [SerializeField] private float force = 50f; // Có thể chỉnh trong Inspector
+    [SerializeField] private float force = 50f;
     private Vector3 mousePos;
     public LayerMask playerLayer;
+    public LayerMask bossLayer;
     private bool isHit = true ;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        rb.gravityScale = 0f; // Đảm bảo không bị trọng lực
-        rb.linearDamping = 0f;         // Đảm bảo không bị lực cản
+        rb.gravityScale = 0f; 
+        //rb.linearDamping = 0f;         // Đảm bảo không bị lực cản
 
         Vector3 direction = (mousePos - transform.position).normalized;
         rb.linearVelocity = direction * force;
@@ -25,12 +26,13 @@ public class BulletScrip : MonoBehaviour
         Collider2D col = GetComponent<Collider2D>();
         if (col != null)
         {
-            col.isTrigger = true;  // Cho phép xuyên qua nhưng vẫn nhận va chạm
+            col.isTrigger = true; 
         }
     }
     private void Update()
     {
         DealDamage();
+        DealDamage1();
     }
 
     public void SetDirection(Vector3 mousePosition)
@@ -38,7 +40,7 @@ public class BulletScrip : MonoBehaviour
         mousePos = mousePosition;
     }
     private void DealDamage()
-    { // Chờ theo animation
+    { 
 
 
         Collider2D hitPlayer = Physics2D.OverlapCircle(transform.position, 1, playerLayer);
@@ -47,6 +49,18 @@ public class BulletScrip : MonoBehaviour
         {
             isHit = false;
             hitPlayer.GetComponent<Health>().TakeDamage(1);
+        }
+    }
+    private void DealDamage1()
+    { 
+
+
+        Collider2D hitPlayer = Physics2D.OverlapCircle(transform.position, 1, bossLayer);
+
+        if (hitPlayer != null && hitPlayer.GetComponent<BossAI>() != null && isHit)
+        {
+            isHit = false;
+            hitPlayer.GetComponent<BossAI>().TakeDamage(100);
         }
     }
 
