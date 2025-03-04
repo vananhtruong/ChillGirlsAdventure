@@ -5,7 +5,7 @@ public class Health : MonoBehaviour
 {
     [Header("Health")]
     [SerializeField] private float startingHealth;
-    public float currentHealth { get; private set; }
+    public float currentHealth;
     private Animator anim;
     private bool dead;
 
@@ -33,9 +33,10 @@ public class Health : MonoBehaviour
         botPrefab=gameObject;
     }
 
-    public IEnumerator TakeDamage(float _damage)
+    public void TakeDamage(float _damage)
     {
         currentHealth = Mathf.Clamp(currentHealth - _damage, 0, startingHealth);
+        currentHealth -= _damage;
         if (currentHealth > 0)
         {
             if (anim != null && anim.HasState(0, Animator.StringToHash("hurt")))
@@ -49,8 +50,7 @@ public class Health : MonoBehaviour
             if (!dead)
             {
                 anim.SetTrigger("die");
-                yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length);
-                gameObject.SetActive(false);
+                //gameObject.SetActive(false);
                 dead = true;
                 StartCoroutine(DisappearAndRespawn());
             }
@@ -64,14 +64,8 @@ public class Health : MonoBehaviour
 
     private IEnumerator DisappearAfterDie()
     {
-        // Wait for the "die" animation to finish (assume it takes 1 second here)
-        yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length);
-        // Alternatively, you could specify a fixed time if the animation length is known
-        // yield return new WaitForSeconds(1f);
-
-        // Deactivate or destroy the GameObject
-        gameObject.SetActive(false);
-        // Or: Destroy(gameObject);
+        yield return new WaitForSeconds(2.5f);
+        
     }
     private IEnumerator FlashRed()
     {
@@ -104,7 +98,8 @@ public class Health : MonoBehaviour
                 Debug.LogError("Lỗi khi Instantiate: " + e.Message);
             }
 
-            
+            Destroy(gameObject);
         }
     }
+    
 }

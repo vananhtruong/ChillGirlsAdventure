@@ -117,7 +117,9 @@ public class Player : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            animator.SetTrigger("Attack");
+            animator.SetTrigger("Attack"); 
+            PlayerAttack();
+            PlayerAttackBoss();
             if (attackSound != null)
             {
                 audioSource.PlayOneShot(attackSound);
@@ -184,8 +186,22 @@ public class Player : MonoBehaviour
         {
             if (hitInfo.GetComponent<Health>() != null)
             {
+                Debug.Log("We hit " + hitInfo.name);
                 hitInfo.GetComponent<Health>().TakeDamage(1);
             }
+        }
+    }
+    public void PlayerAttackBoss()
+    {
+        Collider2D hitInfo = Physics2D.OverlapCircle(attackPoint.position, attackRadius, targetLayer);
+        if (hitInfo)
+        {
+            if (hitInfo.GetComponent<BossAI>() != null)
+            {
+                Debug.Log("We hit " + hitInfo.name);
+                hitInfo.GetComponent<BossAI>().TakeDamage(50);
+            }
+            
         }
     }
 
