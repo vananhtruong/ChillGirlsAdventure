@@ -1,5 +1,4 @@
-using Unity.VisualScripting;
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 
 public class Player : MonoBehaviour
@@ -7,15 +6,18 @@ public class Player : MonoBehaviour
     public Animator animator;
     public Rigidbody2D rb;
 
-    public float jumpHeight = 1f;
-    public bool isGround = true;
-    private float movement;
-    public float moveSpeed = 5f;
-    private bool facingRight = true;
+    public float moveSpeed = 4.0f;
+    public float jumpForce = 7.5f;
+    public float dashForce = 6.0f;
+    private bool grounded = false;
+    private bool isDashing = false;
+    private int facingDirection = 1; // 1 for right, -1 for left
+    private float timeSinceAttack = 0.0f;
+    private int currentAttack = 0;
+    private float delayToIdle = 0.0f;
 
-    private int comboStep = 0;
-    private Coroutine comboCoroutine;
-    public float comboResetTime = 1f;
+    public Transform groundCheck;
+    public float groundCheckRadius = 0.2f;
 
     public Transform attackPoint;
     public float attackRadius = 1.5f;
@@ -23,166 +25,173 @@ public class Player : MonoBehaviour
 
     public int maxHealth = 10;
 
-    private bool canDash = true;
-    private bool isDashing;
-    private float dashingPower = 5f;
-    private float dashingTime = 0.3f;
-    private float dashingCooldown = 1f;
-
     [SerializeField] private TrailRenderer tr;
+    private float dashingTime = 0.3f;
+    private float dashingCooldown = 1.0f;
+
+    private int jumpCount = 0;
+    private int maxJumps = 2;
 
     void Start()
     {
+        if (animator == null)
+            animator = GetComponent<Animator>();
+        if (rb == null)
+            rb = GetComponent<Rigidbody2D>();
     }
 
     void Update()
     {
-        movement = Input.GetAxis("Horizontal");
-        if (movement < 0f && facingRight)
+        // Check if grounded
+        grounded = CheckGrounded();
+
+        // Reset jump count when grounded
+        if (grounded)
         {
-            transform.eulerAngles = new Vector3(0f, -180f, 0f);
-            facingRight = false;
-        }
-        else if (movement > 0f && !facingRight)
-        {
-            transform.eulerAngles = new Vector3(0f, 0f, 0f);
-            facingRight = true;
+            jumpCount = 0;
         }
 
-        if (Input.GetKey(KeyCode.Space) && isGround)
+        // Update timer for attack combo
+        timeSinceAttack += Time.deltaTime;
+
+        float inputX = Input.GetAxis("Horizontal");
+
+        // Flip sprite
+        if (inputX > 0 && facingDirection == -1)
         {
-            Jump();
-            isGround = false;
-            animator.SetBool("Jump", true);
+            transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
+            facingDirection = 1;
+        }
+        else if (inputX < 0 && facingDirection == 1)
+        {
+            transform.localScale = new Vector3(-Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
+            facingDirection = -1;
         }
 
-        if (Mathf.Abs(movement) > 0f)
+        // Move (only if not dashing)
+        if (!isDashing)
         {
-            animator.SetFloat("Run", 1f);
-        }
-        else
-        {
-            animator.SetFloat("Run", 0f);
+            rb.linearVelocity = new Vector2(inputX * moveSpeed, rb.linearVelocity.y);
         }
 
-        Attack();
-        if (maxHealth <= 0)
+        // Set Animator parameters
+        animator.SetFloat("AirSpeedY", rb.linearVelocity.y);
+        animator.SetBool("Grounded", grounded);
+
+        // Attack combo system
+        if (Input.GetMouseButtonDown(0) && timeSinceAttack > 0.25f && !isDashing)
         {
+            if (currentAttack >= 3 || timeSinceAttack > 1.0f)
+            {
+                currentAttack = 0;
+            }
+
+            currentAttack = Mathf.Clamp(currentAttack + 1, 1, 3);
+            animator.SetTrigger("Attack" + currentAttack);
+            timeSinceAttack = 0.0f;
         }
-        if (isDashing)
-        {
-            return;
-        }
-        if (Input.GetKeyDown(KeyCode.LeftShift) && canDash)
+
+        // Dash
+        if (Input.GetKeyDown(KeyCode.LeftShift) && !isDashing && grounded)
         {
             StartCoroutine(Dash());
         }
-    }
 
-    void Attack()
-    {
-        if (Input.GetMouseButtonDown(0))
+        // Jump with double jump limit
+        if (Input.GetKeyDown(KeyCode.Space) && !isDashing)
         {
-            if (comboCoroutine != null)
+            if (grounded || jumpCount < maxJumps - 1)
             {
-                StopCoroutine(comboCoroutine);
+                jumpCount++;
+                animator.SetTrigger("Jump");
+                rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
             }
-            comboStep++;
-            if (comboStep > 4)
-            {
-                comboStep = 1;
-            }
-
-            switch (comboStep)
-            {
-                case 1:
-                    animator.SetTrigger("Attack");
-                    break;
-                case 2:
-                    animator.SetTrigger("Attack1");
-                    break;
-                case 3:
-                    animator.SetTrigger("Attack2");
-                    break;
-                case 4:
-                    animator.SetTrigger("Attack3");
-                    break;
-            }
-
-            comboCoroutine = StartCoroutine(ResetCombo());
         }
+
+        // Run/Idle animations
+        if (Mathf.Abs(inputX) > Mathf.Epsilon)
+        {
+            delayToIdle = 0.05f;
+            animator.SetInteger("AnimState", 1);
+        }
+        else
+        {
+            delayToIdle -= Time.deltaTime;
+            if (delayToIdle < 0)
+                animator.SetInteger("AnimState", 0);
+        }
+
+        // Debug info
+        // Debug.Log($"Grounded: {grounded}, JumpCount: {jumpCount}, AirSpeedY: {rb.linearVelocity.y}");
     }
 
-    private IEnumerator ResetCombo()
+    private bool CheckGrounded()
     {
-        yield return new WaitForSeconds(comboResetTime);
-        comboStep = 0;
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(groundCheck.position, groundCheckRadius);
+        bool isGrounded = false;
+        foreach (Collider2D collider in colliders)
+        {
+            if (collider.CompareTag("Ground"))
+            {
+                isGrounded = true;
+                break;
+            }
+        }
+        return isGrounded;
     }
 
     private void FixedUpdate()
     {
-        transform.position += new Vector3(movement, 0f, 0f) * Time.fixedDeltaTime * moveSpeed;
-        if (isDashing)
-        {
-            return;
-        }
+        // Movement is handled in Update for smoothness
     }
 
-    void Jump()
-    {
-        rb.AddForce(new Vector2(0f, jumpHeight), ForceMode2D.Impulse);
-    }
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        Debug.Log(collision.gameObject.name);
-        if (collision.gameObject.tag == "Ground")
-        {
-            isGround = true;
-            animator.SetBool("Jump", false);
-        }
-    }
-    public void PlayerAttack()
+    void Attack()
     {
         Collider2D hitInfo = Physics2D.OverlapCircle(attackPoint.position, attackRadius, targetLayer);
-        if (hitInfo)
+        if (hitInfo && hitInfo.GetComponent<Health>() != null)
         {
-            if (hitInfo.GetComponent<Health>() != null)
-            {
-                hitInfo.GetComponent<Health>().TakeDamage(1);
-            }
+            hitInfo.GetComponent<Health>().TakeDamage(1);
         }
     }
+
     private void OnDrawGizmosSelected()
     {
         if (attackPoint == null)
-        {
             return;
-        }
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(attackPoint.position, attackRadius);
+
+        if (groundCheck != null)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
+        }
     }
+
     public void PlayerTakeDamage(int damage)
     {
         if (maxHealth <= 0)
-        {
             return;
-        }
         maxHealth -= damage;
+        if (maxHealth <= 0)
+        {
+            Die();
+        }
     }
+
     void Die()
     {
         Debug.Log(this.transform.name + " Die");
     }
+
     private IEnumerator Dash()
     {
-        canDash = false;
         isDashing = true;
         float originalGravity = rb.gravityScale;
         rb.gravityScale = 0f;
         tr.emitting = true;
 
-        Vector2 dashVelocity = new Vector2(transform.localScale.x * dashingPower * (facingRight ? 1 : -1), 0f);
+        Vector2 dashVelocity = new Vector2(facingDirection * dashForce, 0f);
         rb.linearVelocity = dashVelocity;
 
         yield return new WaitForSeconds(dashingTime);
@@ -193,7 +202,10 @@ public class Player : MonoBehaviour
         isDashing = false;
 
         yield return new WaitForSeconds(dashingCooldown);
-        canDash = true;
     }
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        Debug.Log(collision.gameObject.name);
+    }
 }

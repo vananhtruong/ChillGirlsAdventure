@@ -531,6 +531,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &1725647460 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2076109802170413023, guid: 1cef850b6db60784d952bdabb165df3d, type: 3}
+  m_PrefabInstance: {fileID: 7519630062233001709}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1789552647 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1770344672556782, guid: c52c62258af4c5041bc428fa78fc51da, type: 3}
@@ -803,6 +808,10 @@ PrefabInstance:
       propertyPath: attackPoint
       value: 
       objectReference: {fileID: 816447325}
+    - target: {fileID: 6013293471296415152, guid: c52c62258af4c5041bc428fa78fc51da, type: 3}
+      propertyPath: groundCheck
+      value: 
+      objectReference: {fileID: 1725647460}
     - target: {fileID: 6013293471296415152, guid: c52c62258af4c5041bc428fa78fc51da, type: 3}
       propertyPath: attackRadius
       value: 1
