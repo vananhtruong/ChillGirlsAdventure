@@ -14,10 +14,11 @@ GameObject:
   - component: {fileID: 1548115345866074272}
   - component: {fileID: 11565526258529525}
   - component: {fileID: 1827162288108548424}
-  - component: {fileID: -1287622588771600157}
-  m_Layer: 0
+  - component: {fileID: 8760994525757812058}
+  - component: {fileID: 8425166420536004513}
+  m_Layer: 6
   m_Name: BlueSlime
-  m_TagString: Untagged
+  m_TagString: enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -30,9 +31,9 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 485064719985608314}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.31, y: -1.97, z: 0}
-  m_LocalScale: {x: 1.9209, y: 2.3969, z: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 9.34, y: -2.51, z: 0}
+  m_LocalScale: {x: 1.1576132, y: 1.3094946, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -121,11 +122,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 485064719985608314}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ba1da298a0dc78e4f9a1e785085085cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speed: 2
+  moveRange: 6
 --- !u!61 &11565526258529525
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -185,9 +188,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startingHealth: 0
+  currentHealth: 0
   iFramesDuration: 0
   numberOfFlashes: 0
---- !u!50 &-1287622588771600157
+  flashDuration: 0.2
+  botPrefab: {fileID: 485064719985608314}
+  respawnDelay: 2
+--- !u!50 &8760994525757812058
 Rigidbody2D:
   serializedVersion: 5
   m_ObjectHideFlags: 0
@@ -213,4 +220,26 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 4
+  m_Constraints: 0
+--- !u!114 &8425166420536004513
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 485064719985608314}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03e22beffe724854eb7f80c91b839997, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 2
+  moveDistance: 3
+  attackRange: 3
+  attackCooldown: 2
+  attackDamge: 2
+  player: {fileID: 0}
+  attackRadius: 2
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 8
