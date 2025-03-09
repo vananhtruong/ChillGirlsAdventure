@@ -1,9 +1,5 @@
-<<<<<<< HEAD
-﻿using UnityEngine;
-=======
-﻿using Unity.VisualScripting;
+using Unity.VisualScripting;
 using UnityEngine;
->>>>>>> a9670cd417c94c4ef4d0a3849f7267fbaac79b8a
 using System.Collections;
 using UnityEngine.UI;
 
@@ -13,40 +9,25 @@ public class Player : MonoBehaviour
     public Rigidbody2D rb;
     public CharacterControllerManager controllerManager; // Thêm tham chiếu đến manager
 
-<<<<<<< HEAD
-    public float moveSpeed = 4.0f;
-    public float jumpForce = 7.5f;
-    public float dashForce = 6.0f;
-    private bool grounded = false;
-    private bool isDashing = false;
-    private int facingDirection = 1; // 1 for right, -1 for left
-    private float timeSinceAttack = 0.0f;
-    private int currentAttack = 0;
-    private float delayToIdle = 0.0f;
-
-    public Transform groundCheck;
-    public float groundCheckRadius = 0.2f;
-
-=======
     public float jumpHeight = 1f;
     public bool isGround = false;
     private float movement;
     public float moveSpeed = 5f;
     private bool facingRight = true;
 
->>>>>>> a9670cd417c94c4ef4d0a3849f7267fbaac79b8a
     public Transform attackPoint;
     public float attackRadius = 1.5f;
     public LayerMask targetLayer;
 
     public int maxHealth = 10;
 
-    [SerializeField] private TrailRenderer tr;
+    private bool canDash = true;
+    private bool isDashing;
+    private float dashingPower = 5f;
     private float dashingTime = 0.3f;
-    private float dashingCooldown = 1.0f;
+    private float dashingCooldown = 1f;
 
-    private int jumpCount = 0;
-    private int maxJumps = 2;
+    [SerializeField] private TrailRenderer tr;
 
     private int jumpCount = 0;
 
@@ -66,30 +47,16 @@ public class Player : MonoBehaviour
 
     void Start()
     {
-<<<<<<< HEAD
-        if (animator == null)
-            animator = GetComponent<Animator>();
-        if (rb == null)
-            rb = GetComponent<Rigidbody2D>();
-=======
         audioSource = GetComponent<AudioSource>();
         if (audioSource == null)
         {
             audioSource = gameObject.AddComponent<AudioSource>();
         }
         currentTao = maxHealth;
->>>>>>> a9670cd417c94c4ef4d0a3849f7267fbaac79b8a
     }
 
     void Update()
     {
-<<<<<<< HEAD
-        // Check if grounded
-        grounded = CheckGrounded();
-
-        // Reset jump count when grounded
-        if (grounded)
-=======
 
 
         if (transform.position.y < -12f)
@@ -101,51 +68,16 @@ public class Player : MonoBehaviour
 
         movement = Input.GetAxis("Horizontal");
         if (movement < 0f && facingRight)
->>>>>>> a9670cd417c94c4ef4d0a3849f7267fbaac79b8a
         {
-            jumpCount = 0;
+            transform.eulerAngles = new Vector3(0f, -180f, 0f);
+            facingRight = false;
+        }
+        else if (movement > 0f && !facingRight)
+        {
+            transform.eulerAngles = new Vector3(0f, 0f, 0f);
+            facingRight = true;
         }
 
-<<<<<<< HEAD
-        // Update timer for attack combo
-        timeSinceAttack += Time.deltaTime;
-
-        float inputX = Input.GetAxis("Horizontal");
-
-        // Flip sprite
-        if (inputX > 0 && facingDirection == -1)
-        {
-            transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
-            facingDirection = 1;
-        }
-        else if (inputX < 0 && facingDirection == 1)
-        {
-            transform.localScale = new Vector3(-Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
-            facingDirection = -1;
-        }
-
-        // Move (only if not dashing)
-        if (!isDashing)
-        {
-            rb.linearVelocity = new Vector2(inputX * moveSpeed, rb.linearVelocity.y);
-        }
-
-        // Set Animator parameters
-        animator.SetFloat("AirSpeedY", rb.linearVelocity.y);
-        animator.SetBool("Grounded", grounded);
-
-        // Attack combo system
-        if (Input.GetMouseButtonDown(0) && timeSinceAttack > 0.25f && !isDashing)
-        {
-            if (currentAttack >= 3 || timeSinceAttack > 1.0f)
-            {
-                currentAttack = 0;
-            }
-
-            currentAttack = Mathf.Clamp(currentAttack + 1, 1, 3);
-            animator.SetTrigger("Attack" + currentAttack);
-            timeSinceAttack = 0.0f;
-=======
         animator.SetBool("Grounded", isGround);
         animator.SetBool("Jump", !isGround && rb.linearVelocity.y > 0);
 
@@ -178,75 +110,31 @@ public class Player : MonoBehaviour
         if (maxHealth <= 0)
         {
             Die();
->>>>>>> a9670cd417c94c4ef4d0a3849f7267fbaac79b8a
         }
-
-        // Dash
-        if (Input.GetKeyDown(KeyCode.LeftShift) && !isDashing && grounded)
+        if (isDashing)
+        {
+            return;
+        }
+        if (Input.GetKeyDown(KeyCode.LeftShift) && canDash)
         {
             StartCoroutine(Dash());
         }
+    }
 
-        // Jump with double jump limit
-        if (Input.GetKeyDown(KeyCode.Space) && !isDashing)
+    void Attack()
+    {
+        if (Input.GetMouseButtonDown(0))
         {
-<<<<<<< HEAD
-            if (grounded || jumpCount < maxJumps - 1)
-            {
-                jumpCount++;
-                animator.SetTrigger("Jump");
-                rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
-=======
-            animator.SetTrigger("Attack"); 
+            animator.SetTrigger("Attack");
             PlayerAttack();
             PlayerAttackBoss();
             if (attackSound != null)
             {
                 audioSource.PlayOneShot(attackSound);
->>>>>>> a9670cd417c94c4ef4d0a3849f7267fbaac79b8a
             }
         }
-
-        // Run/Idle animations
-        if (Mathf.Abs(inputX) > Mathf.Epsilon)
-        {
-            delayToIdle = 0.05f;
-            animator.SetInteger("AnimState", 1);
-        }
-        else
-        {
-            delayToIdle -= Time.deltaTime;
-            if (delayToIdle < 0)
-                animator.SetInteger("AnimState", 0);
-        }
-
-        // Debug info
-        // Debug.Log($"Grounded: {grounded}, JumpCount: {jumpCount}, AirSpeedY: {rb.linearVelocity.y}");
     }
 
-<<<<<<< HEAD
-    private bool CheckGrounded()
-    {
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(groundCheck.position, groundCheckRadius);
-        bool isGrounded = false;
-        foreach (Collider2D collider in colliders)
-        {
-            if (collider.CompareTag("Ground"))
-            {
-                isGrounded = true;
-                break;
-            }
-        }
-        return isGrounded;
-    }
-
-    private void FixedUpdate()
-    {
-        // Movement is handled in Update for smoothness
-    }
-
-    void Attack()
-=======
     private void FixedUpdate()
     {
         if (!enabled) return; // Chỉ chạy khi component được bật
@@ -300,16 +188,10 @@ public class Player : MonoBehaviour
     }
 
     public void PlayerAttack()
->>>>>>> a9670cd417c94c4ef4d0a3849f7267fbaac79b8a
     {
         Collider2D hitInfo = Physics2D.OverlapCircle(attackPoint.position, attackRadius, targetLayer);
-        if (hitInfo && hitInfo.GetComponent<Health>() != null)
+        if (hitInfo)
         {
-<<<<<<< HEAD
-            hitInfo.GetComponent<Health>().TakeDamage(1);
-        }
-    }
-=======
             if (hitInfo.GetComponent<Health>() != null)
             {
                 Debug.Log("We hit " + hitInfo.name);
@@ -327,28 +209,20 @@ public class Player : MonoBehaviour
                 Debug.Log("We hit " + hitInfo.name);
                 hitInfo.GetComponent<BossAI>().TakeDamage(50);
             }
-            
+
         }
     }
->>>>>>> a9670cd417c94c4ef4d0a3849f7267fbaac79b8a
 
     private void OnDrawGizmosSelected()
     {
         if (attackPoint == null)
+        {
             return;
+        }
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(attackPoint.position, attackRadius);
-<<<<<<< HEAD
-
-        if (groundCheck != null)
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
-        }
-=======
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, 0.1f);
->>>>>>> a9670cd417c94c4ef4d0a3849f7267fbaac79b8a
     }
 
     public void PlayerTakeDamage(int damage)
@@ -359,19 +233,15 @@ public class Player : MonoBehaviour
             return;
         }
         if (maxHealth <= 0)
-            return;
-        maxHealth -= damage;
-<<<<<<< HEAD
-        if (maxHealth <= 0)
         {
-            Die();
-=======
+            return;
+        }
+        maxHealth -= damage;
         currentTao -= damage;
         animator.SetTrigger("Hurt");
         if (hurtSound != null)
         {
             audioSource.PlayOneShot(hurtSound);
->>>>>>> a9670cd417c94c4ef4d0a3849f7267fbaac79b8a
         }
     }
 
@@ -387,6 +257,7 @@ public class Player : MonoBehaviour
 
     private IEnumerator Dash()
     {
+        canDash = false;
         isDashing = true;
         float originalGravity = rb.gravityScale;
         rb.gravityScale = 0f;
@@ -398,7 +269,7 @@ public class Player : MonoBehaviour
             audioSource.PlayOneShot(dashSound);
         }
 
-        Vector2 dashVelocity = new Vector2(facingDirection * dashForce, 0f);
+        Vector2 dashVelocity = new Vector2(transform.localScale.x * dashingPower * (facingRight ? 1 : -1), 0f);
         rb.linearVelocity = dashVelocity;
 
         yield return new WaitForSeconds(dashingTime);
@@ -409,6 +280,7 @@ public class Player : MonoBehaviour
         isDashing = false;
 
         yield return new WaitForSeconds(dashingCooldown);
+        canDash = true;
     }
     public static float Clamp(float value, float min, float max)
     {
@@ -421,11 +293,6 @@ public class Player : MonoBehaviour
             value = max;
         }
 
-<<<<<<< HEAD
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        Debug.Log(collision.gameObject.name);
-=======
         return value;
     }
     private void ClampOnBackground()
@@ -461,6 +328,5 @@ public class Player : MonoBehaviour
         // Chờ 1.5 giây - điều chỉnh thời gian theo animation Die của bạn
         yield return new WaitForSeconds(1.5f);
         Destroy(gameObject);
->>>>>>> a9670cd417c94c4ef4d0a3849f7267fbaac79b8a
     }
 }
