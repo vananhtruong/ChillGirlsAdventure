@@ -24,17 +24,14 @@ public class CharacterControllerManager : MonoBehaviour
 
     void Update()
     {
-        // Kiểm tra trạng thái để quyết định hành vi của E
         if (isControllingPlayer)
         {
-            // Khi điều khiển Player: chỉ chuyển sang Robot khi gần Robot
             float distance = Vector2.Distance(player.transform.position, robot.transform.position);
             isNearRobot = distance <= interactionDistance;
         }
         else
         {
-            // Khi điều khiển Robot: luôn cho phép thoát ra
-            isNearRobot = true; // Cho phép thoát bất cứ lúc nào
+            isNearRobot = true;
         }
 
         if (isNearRobot && Input.GetKeyDown(KeyCode.E))
@@ -47,7 +44,6 @@ public class CharacterControllerManager : MonoBehaviour
     {
         if (isControllingPlayer)
         {
-            // Chuyển sang điều khiển Robot
             player.enabled = false;
             player.gameObject.SetActive(false);
             robot.enabled = true;
@@ -61,7 +57,6 @@ public class CharacterControllerManager : MonoBehaviour
         }
         else
         {
-            // Chuyển về điều khiển Player
             robot.enabled = false;
             player.enabled = true;
             player.gameObject.SetActive(true);

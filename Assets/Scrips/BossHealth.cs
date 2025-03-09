@@ -1,35 +1,13 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BossHealth : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    public int health = 500;
+    public Image Hp; 
 
-    public GameObject deathEffect;
-
-    public bool isInvulnerable = false;
-
-    public void TakeDamage(int damage)
+    public void UpdateHP(float currentHP, float maxHP)
     {
-        if (isInvulnerable)
-            return;
-
-        health -= damage;
-
-        if (health <= 200)
-        {
-            GetComponent<Animator>().SetBool("IsEnraged", true);
-        }
-
-        if (health <= 0)
-        {
-            Die();
-        }
-    }
-
-    void Die()
-    {
-        Instantiate(deathEffect, transform.position, Quaternion.identity);
-        Destroy(gameObject);
+        Hp.fillAmount = currentHP/maxHP;
     }
 }

@@ -16,9 +16,9 @@ GameObject:
   - component: {fileID: 1827162288108548424}
   - component: {fileID: 8760994525757812058}
   - component: {fileID: 8425166420536004513}
-  m_Layer: 3
+  m_Layer: 6
   m_Name: BlueSlime
-  m_TagString: Player
+  m_TagString: enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -31,9 +31,9 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 485064719985608314}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 9.34, y: -2.51, z: 0}
-  m_LocalScale: {x: 0.6619093, y: 0.86882603, z: 1}
+  m_LocalScale: {x: 1.1576132, y: 1.3094946, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -188,6 +188,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startingHealth: 0
+  currentHealth: 0
   iFramesDuration: 0
   numberOfFlashes: 0
   flashDuration: 0.2
@@ -233,10 +234,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 2
-  moveDistance: 5
-  attackRange: 5
+  moveDistance: 3
+  attackRange: 3
   attackCooldown: 2
   attackDamge: 2
+  player: {fileID: 0}
   attackRadius: 2
   playerLayer:
     serializedVersion: 2
