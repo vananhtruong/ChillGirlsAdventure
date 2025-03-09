@@ -702,10 +702,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+<<<<<<< HEAD
+--- !u!4 &1725647460 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2076109802170413023, guid: 1cef850b6db60784d952bdabb165df3d, type: 3}
+  m_PrefabInstance: {fileID: 7519630062233001709}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1789552647 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1770344672556782, guid: c52c62258af4c5041bc428fa78fc51da, type: 3}
+  m_PrefabInstance: {fileID: 5744040999509252762}
+=======
 --- !u!114 &1852648154 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5108169239840556031, guid: 84cb69abfea434a4e842443ffb799932, type: 3}
   m_PrefabInstance: {fileID: 383981606}
+>>>>>>> a9670cd417c94c4ef4d0a3849f7267fbaac79b8a
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
@@ -888,6 +900,19 @@ PrefabInstance:
     - target: {fileID: 2928775314773545595, guid: c52c62258af4c5041bc428fa78fc51da, type: 3}
       propertyPath: TextHeart
       value: 
+<<<<<<< HEAD
+      objectReference: {fileID: 1789552648}
+    - target: {fileID: 6013293471296415152, guid: c52c62258af4c5041bc428fa78fc51da, type: 3}
+      propertyPath: attackPoint
+      value: 
+      objectReference: {fileID: 816447325}
+    - target: {fileID: 6013293471296415152, guid: c52c62258af4c5041bc428fa78fc51da, type: 3}
+      propertyPath: groundCheck
+      value: 
+      objectReference: {fileID: 1725647460}
+    - target: {fileID: 6013293471296415152, guid: c52c62258af4c5041bc428fa78fc51da, type: 3}
+      propertyPath: attackRadius
+=======
       objectReference: {fileID: 1852648154}
     - target: {fileID: 2928775314773545595, guid: c52c62258af4c5041bc428fa78fc51da, type: 3}
       propertyPath: jumpHeight
@@ -919,6 +944,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6073692850049003143, guid: c52c62258af4c5041bc428fa78fc51da, type: 3}
       propertyPath: m_LocalRotation.w
+>>>>>>> a9670cd417c94c4ef4d0a3849f7267fbaac79b8a
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6073692850049003143, guid: c52c62258af4c5041bc428fa78fc51da, type: 3}
