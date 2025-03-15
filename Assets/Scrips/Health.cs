@@ -22,6 +22,7 @@ public class Health : MonoBehaviour
 
     private AudioSource audioSource;
     [SerializeField] private AudioClip enemyHurt;
+    public int rewardMoney = 5; // Số tiền nhận được khi giết quái
 
     private void Awake()
     {
@@ -32,13 +33,14 @@ public class Health : MonoBehaviour
         {
             originalColor = spriteRend.color;
         }
-        botPrefab=gameObject;
+
         audioSource = GetComponent<AudioSource>();
         if (audioSource == null)
         {
             audioSource = gameObject.AddComponent<AudioSource>();
         }
     }
+
 
     public void TakeDamage(float _damage)
     {
@@ -59,6 +61,13 @@ public class Health : MonoBehaviour
             {
                 anim.SetTrigger("die");
                 //gameObject.SetActive(false);
+                Player player = GameObject.FindGameObjectWithTag("Player")?.GetComponent<Player>();
+                if (player != null)
+                {
+                    player.coins += rewardMoney;
+                    player.UpdateCoinUI();
+                }
+                if (GetComponent<EnemyAI>() != null) GetComponent<EnemyAI>().enabled = false;
                 dead = true;
                 StartCoroutine(DisappearAndRespawn());
             }
@@ -73,7 +82,7 @@ public class Health : MonoBehaviour
     private IEnumerator DisappearAfterDie()
     {
         yield return new WaitForSeconds(2.5f);
-        
+
     }
     private IEnumerator FlashRed()
     {
@@ -83,31 +92,31 @@ public class Health : MonoBehaviour
     }
     private IEnumerator DisappearAndRespawn()
     {
-        Vector3 deathPosition = transform.position; // Lưu lại vị trí bot chết
-        Quaternion deathRotation = transform.rotation; // Lưu lại hướng quay của bot
+        Vector3 deathPosition = transform.position;
+        Quaternion deathRotation = transform.rotation;
 
-        Debug.Log("Bot Prefab day ne: " + (botPrefab != null ? botPrefab.name : "NULL"));
-        Debug.Log("Bot deathPosition day ne: " + deathPosition);
-        Debug.Log("Bot deathRotation day ne: " + deathRotation);
+        // Tắt Collider để bot không thể bị chạm vào
+        Collider2D col = GetComponent<Collider2D>();
+        if (col != null) col.enabled = false;
 
-        // Spawn bot mới ở vị trí cũ
+        Debug.Log("Bot đã bị vô hiệu hóa, chờ " + respawnDelay + " giây để spawn bot mới...");
+
+        yield return new WaitForSeconds(respawnDelay); // Chờ trước khi spawn bot mới
+
         if (botPrefab != null)
         {
-
-            Debug.Log("Spawn bot mới sau " + respawnDelay + " giây...");
-            yield return new WaitForSeconds(respawnDelay);
-            try
-            {
-                GameObject newBot = Instantiate(botPrefab, deathPosition, deathRotation);
-                Debug.Log("Bot mới đã spawn thành công tại: " + deathPosition);
-            }
-            catch (System.Exception e)
-            {
-                Debug.LogError("Lỗi khi Instantiate: " + e.Message);
-            }
-
-            Destroy(gameObject);
+            col.enabled = true;
+            if (GetComponent<EnemyAI>() != null) GetComponent<EnemyAI>().enabled = true;
+            GameObject newBot = Instantiate(botPrefab, deathPosition, deathRotation);
+            Debug.Log("Bot mới đã spawn tại: " + deathPosition);
         }
+        else
+        {
+            Debug.LogError("botPrefab bị NULL! Hãy kiểm tra lại.");
+        }
+        col.enabled = true; // Bật Collider trở lại
+        Destroy(gameObject); // Xóa bot cũ sau khi spawn bot mới
     }
-    
+
+
 }

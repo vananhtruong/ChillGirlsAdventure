@@ -5,14 +5,11 @@ using UnityEngine.Audio;
 public class EnemyAI : MonoBehaviour
 {
     public float speed = 2f;
-    public float moveDistance = 5f;
-    public float attackRange = 5;
+    public float attackRange = 5f;
     public float attackCooldown = 2f;
-    public int attackDamge = 2;
+    public int attackDamage = 2;
 
     private Animator animator;
-    private Vector3 startPosition;
-    private int direction = 1;
     private bool isAttacking = false;
     private float attackTimer = 0f;
     public Transform player;
@@ -21,31 +18,41 @@ public class EnemyAI : MonoBehaviour
     public LayerMask playerLayer;
     private AudioSource audioSource;
     [SerializeField] private AudioClip enemyAtk;
-    bool isFlipped = false;
+    private bool isFlipped = false;
+
+    // Nhập 2 điểm từ Inspector
+    public Vector3 startPoint;
+    public Vector3 endPoint;
+
+    private Vector3 currentTarget;
+
     void Start()
     {
         animator = GetComponent<Animator>();
-        startPosition = transform.position;
-        player = GameObject.FindGameObjectWithTag("Player").transform;
-        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
-        if (playerObj != null)
-        {
-            player = playerObj.transform;
-        }
-        else
+        transform.position = startPoint; // Đặt vị trí ban đầu
+        currentTarget = endPoint; // Bắt đầu di chuyển về EndPoint
+
+        player = GameObject.FindGameObjectWithTag("Player")?.transform;
+        if (player == null)
         {
             Debug.LogError("Không tìm thấy Player! Hãy kiểm tra tag của Player.");
         }
-        audioSource = GetComponent<AudioSource>();
-        if (audioSource == null)
+
+        audioSource = GetComponent<AudioSource>() ?? gameObject.AddComponent<AudioSource>();
+
+        // **Đảm bảo bot quay đúng hướng khi spawn**
+        if (currentTarget.x < transform.position.x && !isFlipped)
         {
-            audioSource = gameObject.AddComponent<AudioSource>();
+            Flip();
+        }
+        else if (currentTarget.x > transform.position.x && isFlipped)
+        {
+            Flip();
         }
     }
 
     void Update()
     {
-        
         if (isAttacking)
         {
             attackTimer -= Time.deltaTime;
@@ -63,7 +70,6 @@ public class EnemyAI : MonoBehaviour
         {
             audioSource.PlayOneShot(enemyAtk);
             Attack();
-            //Debug.Log("Khoảng cách đến Player: " + distanceToPlayer);
         }
         else
         {
@@ -74,13 +80,13 @@ public class EnemyAI : MonoBehaviour
     void Patrol()
     {
         animator.SetBool("isMoving", true);
+        transform.position = Vector3.MoveTowards(transform.position, currentTarget, speed * Time.deltaTime);
 
-        transform.Translate(Vector2.right * direction * speed * Time.deltaTime);
-
-        if (Mathf.Abs(transform.position.x - startPosition.x) >= moveDistance)
+        // Nếu bot đến vị trí mục tiêu, đổi hướng
+        if (Vector3.Distance(transform.position, currentTarget) < 0.1f)
         {
-            direction *= -1;
-            transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
+            currentTarget = (currentTarget == startPoint) ? endPoint : startPoint;
+            Flip();
         }
     }
 
@@ -92,7 +98,7 @@ public class EnemyAI : MonoBehaviour
         LookAtPlayer();
         animator.SetTrigger("isAttacking");
         StartCoroutine(DealDamage());
-        Invoke(nameof(ResetAttack), 0.5f); // Reset lại attack sau animation
+        Invoke(nameof(ResetAttack), 0.5f);
     }
 
     void ResetAttack()
@@ -103,24 +109,22 @@ public class EnemyAI : MonoBehaviour
 
     private IEnumerator DealDamage()
     {
-        yield return new WaitForSeconds(0.5f); // Chờ theo animation
-
-        if (!isAttacking) yield break; // Nếu đang không attack, thoát luôn
+        yield return new WaitForSeconds(0.5f);
+        if (!isAttacking) yield break;
 
         Collider2D hitPlayer = Physics2D.OverlapCircle(transform.position, attackRadius, playerLayer);
-
         if (hitPlayer != null && hitPlayer.GetComponent<Player>() != null)
         {
-            hitPlayer.GetComponent<Player>().PlayerTakeDamage(attackDamge);
+            hitPlayer.GetComponent<Player>().PlayerTakeDamage(attackDamage);
         }
     }
-
 
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, attackRadius); // Dùng transform.position thay vì attackPoint
+        Gizmos.DrawWireSphere(transform.position, attackRadius);
     }
+
     public void LookAtPlayer()
     {
         Vector3 flipped = transform.localScale;
@@ -138,4 +142,13 @@ public class EnemyAI : MonoBehaviour
             isFlipped = true;
         }
     }
+
+    private void Flip()
+    {
+        isFlipped = !isFlipped;
+        Vector3 newScale = transform.localScale;
+        newScale.x *= -1; // Lật bot
+        transform.localScale = newScale;
+    }
+
 }

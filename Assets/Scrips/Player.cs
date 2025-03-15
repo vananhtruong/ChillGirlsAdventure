@@ -36,6 +36,8 @@ public class Player : MonoBehaviour
     //collection
     public int currentTao = 0;
     public Text TextHeart;
+    public int coins = 0;
+    public Text coinText;
 
     private AudioSource audioSource;
     [SerializeField] private AudioClip jumpSound;
@@ -329,4 +331,13 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(1.5f);
         Destroy(gameObject);
     }
+    public void UpdateCoinUI()
+    {
+        if (coinText != null)
+        {
+
+            coinText.text =coins.ToString();
+        }
+    }
+
 }
