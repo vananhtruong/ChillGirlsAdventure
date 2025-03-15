@@ -15,7 +15,8 @@ GameObject:
   - component: {fileID: 2928775314773545595}
   - component: {fileID: 8475461233263113414}
   - component: {fileID: 3807102927365490266}
-  m_Layer: 0
+  - component: {fileID: 4178602110462515037}
+  m_Layer: 3
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -32,7 +33,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.29, y: -0.62, z: 0}
-  m_LocalScale: {x: 2.805, y: 2.4327, z: 1}
+  m_LocalScale: {x: 5.5847554, y: 4.3109875, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5273257322337929841}
@@ -181,7 +182,7 @@ MonoBehaviour:
   animator: {fileID: 8475461233263113414}
   rb: {fileID: 7457960472976327159}
   controllerManager: {fileID: 0}
-  jumpHeight: 5
+  jumpHeight: 10
   isGround: 1
   moveSpeed: 5
   attackPoint: {fileID: 5273257322337929841}
@@ -189,8 +190,10 @@ MonoBehaviour:
   targetLayer:
     serializedVersion: 2
     m_Bits: 64
-  maxHealth: 10
+  maxHealth: 100
   tr: {fileID: 3807102927365490266}
+  currentTao: 0
+  TextHeart: {fileID: 0}
   jumpSound: {fileID: 8300000, guid: f944bddb60e210c40be39a12a9bc0010, type: 3}
   attackSound: {fileID: 8300000, guid: 34ec34246d5e77848a562b6c3a8a73fe, type: 3}
   dashSound: {fileID: 8300000, guid: bbe83c86cc5c1ef4b90719fee8ffb71a, type: 3}
@@ -342,7 +345,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5273257322337929841}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: AttackPoint
   m_TagString: Untagged
   m_Icon: {fileID: 3443629218296621865, guid: 0000000000000000d000000000000000, type: 0}
@@ -419,5 +422,22 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8509498282519796007, guid: 4ff3e2c678a26c245926fa55a1171555, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4178602110462515037}
   m_SourcePrefab: {fileID: 100100000, guid: 4ff3e2c678a26c245926fa55a1171555, type: 3}
+--- !u!114 &4178602110462515037
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 271252122699410807}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5474505a91d789348b9e90aab6f5c6d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerHeart: 0
+  playerGold: 0

@@ -36,6 +36,8 @@ public class Player : MonoBehaviour
     //collection
     public int currentTao = 0;
     public Text TextHeart;
+    public int gold = 0;
+    public Text TextGold;
 
     private AudioSource audioSource;
     [SerializeField] private AudioClip jumpSound;
@@ -47,12 +49,18 @@ public class Player : MonoBehaviour
 
     void Start()
     {
+
         audioSource = GetComponent<AudioSource>();
         if (audioSource == null)
         {
             audioSource = gameObject.AddComponent<AudioSource>();
         }
-        currentTao = maxHealth;
+        if (PlayerData.instance != null)
+        {
+            maxHealth = PlayerData.instance.playerHeart;
+            currentTao = maxHealth;
+            gold = PlayerData.instance.playerGold;
+        }
     }
 
     void Update()
@@ -325,8 +333,17 @@ public class Player : MonoBehaviour
     }
     private IEnumerator DestroyAfterAnimation()
     {
-        // Chờ 1.5 giây - điều chỉnh thời gian theo animation Die của bạn
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(1f);
         Destroy(gameObject);
+    }
+    private void OnApplicationQuit()
+    {
+        // Lưu dữ liệu khi thoát game
+        if (PlayerData.instance != null)
+        {
+            PlayerData.instance.playerHeart = currentTao; // Gán giá trị hiện tại vào PlayerData
+            PlayerData.instance.playerGold = gold;
+            PlayerData.instance.SaveData();
+        }
     }
 }
