@@ -7,7 +7,7 @@ public class SceneController : MonoBehaviour
 {
     public static SceneController instance;
     [SerializeField] Animator transitionAmin;
-    public int maxHealth = 10;
+    //public int maxHealth = 10;
     public int currentTao = 0; 
     public Text TextHeart;
     private int initialTao; // Lưu điểm đầu màn
@@ -24,7 +24,8 @@ public class SceneController : MonoBehaviour
             // Chỉ khởi tạo điểm nếu chưa có
             if (currentTao == 0)
             {
-                currentTao = maxHealth;
+                //currentTao = 12;
+                currentTao = PlayerData.instance.playerHeart;
             }
         }
         else
@@ -51,8 +52,6 @@ public class SceneController : MonoBehaviour
     public void ResetToLevelStart()
     {
         currentTao = initialTao; // Khôi phục điểm đầu màn
-        maxHealth = initialHealth;
-        Debug.Log("Reset màn về điểm đầu: Táo = " + currentTao + ", Máu = " + maxHealth);
         UpdateUI();
     }
     public IEnumerator LoadLevel(int sceneIndex)
@@ -74,7 +73,6 @@ public class SceneController : MonoBehaviour
 
         // 🟢 Khi vào màn mới, lưu lại điểm khởi đầu
         initialTao = currentTao;
-        initialHealth = maxHealth;
     }
 
     public void AddTao()
@@ -93,7 +91,6 @@ public class SceneController : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
-        maxHealth -= damage;
         currentTao -= damage;
         UpdateUI();
     }
@@ -111,6 +108,16 @@ public class SceneController : MonoBehaviour
         {
            // TextHeart.text = "Táo: " + currentTao.ToString();
             TextHeart.text = currentTao.ToString();
+        }
+    }
+    private void OnApplicationQuit()
+    {
+        // Lưu dữ liệu khi thoát game
+        if (PlayerData.instance != null)
+        {
+            PlayerData.instance.playerHeart = currentTao; // Gán giá trị hiện tại vào PlayerData
+            PlayerData.instance.playerGold = 1;
+            PlayerData.instance.SaveData();
         }
     }
 
