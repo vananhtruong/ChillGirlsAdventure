@@ -3,31 +3,31 @@ using UnityEngine.SceneManagement;
 
 public class FinishScript : MonoBehaviour
 {
-    //[SerializeField] bool goNextLevel;
-    //[SerializeField] string levelName;
-    //private void OnTriggerEnter2D(Collider2D collision)
-    //{
-    //    if (collision.CompareTag("Player"))
-    //    {
-    //        if (goNextLevel)
-    //        {
-    //            ManagemantSence.instance.NextLevel();
-    //        }
-    //        else
-    //        {
-    //            ManagemantSence.instance.LoadScene(levelName);
-
-    //        }
-    //    }
-    //}
+    [SerializeField] bool goNextLevel;
+    [SerializeField] string levelName;
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))
         {
-            UnlockNewLevel();
-            ManagemantSence.instance.NextLevel();
+            if (goNextLevel)
+            {
+                SceneController.instance.NextLevel();
+            }
+            else
+            {
+                SceneController.instance.LoadScene(levelName);
+
+            }
         }
     }
+    //private void OnTriggerEnter2D(Collider2D collision)
+    //{
+    //    if (collision.CompareTag("Player"))
+    //    {
+    //        UnlockNewLevel();
+    //        SceneController.instance.NextLevel();
+    //    }
+    //}
     void UnlockNewLevel()
     {
         if(SceneManager.GetActiveScene().buildIndex >= PlayerPrefs.GetInt("ReachedIndex"))
