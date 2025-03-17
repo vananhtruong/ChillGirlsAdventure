@@ -4,10 +4,26 @@ using UnityEngine.SceneManagement;
 
 public class WinScreenUI : MonoBehaviour
 {
+    private static WinScreenUI instance;
+
     public TMP_Text totalTime;
     public TMP_Text topTimesText;
     private AudioSource audioSource;
     [SerializeField] private AudioClip victory;
+    
+
+    void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
     void OnEnable()
     {
         AudioSource[] allAudioSources = FindObjectsOfType<AudioSource>();

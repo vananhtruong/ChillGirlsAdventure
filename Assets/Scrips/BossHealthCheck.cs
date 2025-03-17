@@ -1,32 +1,59 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class BossHealthCheck : MonoBehaviour
 {
     public BossAI boss;
     public GameObject winScreen;
-    public Player player;
     public GameObject loseScreen;
     private bool isDead = false;
+    private bool islv3 = false;
+    public SceneController sceneController;
+    public static BossHealthCheck instance;
 
+    void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
     void Update()
     {
-        if (boss != null && boss.currentHP <= 0 && !isDead)
+        
+        if (boss != null && boss.currentHP <= 0 && !isDead 
+            )
         {
             isDead = true;
             StartCoroutine(ShowWinScreen());
         }
-        if (player != null && player.maxHealth <= 0)
+        if (sceneController != null && sceneController.currentTao <= 0)
         {
             StartCoroutine(HandleDefeat());
         }
     }
-
+    public void ShowWin()
+    {
+        StartCoroutine(ShowWinScreen());
+    }
     IEnumerator ShowWinScreen()
     {
         yield return new WaitForSeconds(1);
-        winScreen.SetActive(true); // Show Win Screen
-        GameTimer.Instance.StopAndSaveTime(); // Save data
+        if (winScreen != null)
+        {
+            winScreen.SetActive(true);
+        }
+        else
+        {
+            Debug.LogWarning("WinScreen chưa được gán trong Inspector!");
+        } 
+        GameTimer.Instance.StopAndSaveTime();
     }
     IEnumerator HandleDefeat()
     {

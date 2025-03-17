@@ -23,7 +23,7 @@ public class BossAI : MonoBehaviour
     private bool isCoolingDown = false;
     private bool isSpellDame = false;
     private bool isInvulnerable = false;
-
+    private BossHealthCheck healthCheck;
 
     public float attackRadius = 4f;
     public LayerMask playerLayer;
@@ -263,7 +263,9 @@ public class BossAI : MonoBehaviour
     private IEnumerator DeathSequence()
     {
         yield return new WaitForSeconds(1f);
+        BossHealthCheck.instance.ShowWin();
         Destroy(gameObject);
+
     }
     private void ReturnToIdle()
     {
