@@ -194,6 +194,8 @@ MonoBehaviour:
   flashDuration: 0.2
   botPrefab: {fileID: 485064719985608314}
   respawnDelay: 2
+  enemyHurt: {fileID: 8300000, guid: 2029172f86b60bd40a7565880b4c40ef, type: 3}
+  rewardMoney: 5
 --- !u!50 &8760994525757812058
 Rigidbody2D:
   serializedVersion: 5
@@ -234,12 +236,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 2
-  moveDistance: 3
   attackRange: 3
   attackCooldown: 2
-  attackDamge: 2
+  attackDamage: 2
   player: {fileID: 0}
   attackRadius: 2
   playerLayer:
     serializedVersion: 2
     m_Bits: 8
+  enemyAtk: {fileID: 8300000, guid: 8e7ab391ebce858468844848179a3166, type: 3}
+  startPoint: {x: 75.16, y: -4.7, z: 0}
+  endPoint: {x: 84.2, y: -4.7, z: 0}

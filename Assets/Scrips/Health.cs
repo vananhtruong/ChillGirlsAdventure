@@ -93,7 +93,7 @@ public class Health : MonoBehaviour
     private IEnumerator DisappearAndRespawn()
     {
         Vector3 deathPosition = transform.position;
-        Quaternion deathRotation = transform.rotation;
+        //Quaternion deathRotation = transform.rotation;
 
         // Tắt Collider để bot không thể bị chạm vào
         Collider2D col = GetComponent<Collider2D>();
@@ -107,7 +107,11 @@ public class Health : MonoBehaviour
         {
             col.enabled = true;
             if (GetComponent<EnemyAI>() != null) GetComponent<EnemyAI>().enabled = true;
-            GameObject newBot = Instantiate(botPrefab, deathPosition, deathRotation);
+            GameObject newBot = Instantiate(botPrefab, deathPosition, Quaternion.identity); // Không giữ lại rotation
+            newBot.transform.localScale = new Vector3(Mathf.Abs(newBot.transform.localScale.x),
+                                                      newBot.transform.localScale.y,
+                                                      newBot.transform.localScale.z);
+
             Debug.Log("Bot mới đã spawn tại: " + deathPosition);
         }
         else

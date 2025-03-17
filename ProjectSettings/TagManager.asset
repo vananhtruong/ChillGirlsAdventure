@@ -63,5 +63,8 @@ TagManager:
   - name: GroundTile
     uniqueID: 3801932591
     locked: 0
+  - name: Sound
+    uniqueID: 3956125297
+    locked: 0
   m_RenderingLayers:
   - Default

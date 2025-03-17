@@ -40,15 +40,6 @@ public class EnemyAI : MonoBehaviour
 
         audioSource = GetComponent<AudioSource>() ?? gameObject.AddComponent<AudioSource>();
 
-        // **Đảm bảo bot quay đúng hướng khi spawn**
-        if (currentTarget.x < transform.position.x && !isFlipped)
-        {
-            Flip();
-        }
-        else if (currentTarget.x > transform.position.x && isFlipped)
-        {
-            Flip();
-        }
     }
 
     void Update()
@@ -95,7 +86,7 @@ public class EnemyAI : MonoBehaviour
         isAttacking = true;
         attackTimer = attackCooldown;
         animator.SetBool("isMoving", false);
-        LookAtPlayer();
+        //LookAtPlayer();
         animator.SetTrigger("isAttacking");
         StartCoroutine(DealDamage());
         Invoke(nameof(ResetAttack), 0.5f);
