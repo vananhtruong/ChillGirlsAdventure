@@ -13,7 +13,7 @@ public class BossAI : MonoBehaviour
     public float moveSpeed = 2f;
     public float attackRange = 3f;
     public float maxHP = 500;
-    private float currentHP;
+    public float currentHP;
     private BossState currentState;
     private bool isFlipped = false;
     private int attack2Count = 0;
@@ -28,9 +28,20 @@ public class BossAI : MonoBehaviour
     public float attackRadius = 4f;
     public LayerMask playerLayer;
     public int bossDame = 1;
+
+    private AudioSource audioSource;
+    [SerializeField] private AudioClip bossTele;
+    private bool isAudioTele = false;
+    [SerializeField] private AudioClip bossScream;
+    private bool isAudioScream = false;
     private void Start()
     {
         animator = GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+        }
         currentHP = maxHP;
         health.UpdateHP(currentHP, maxHP);
         ChangeState(BossState.Idle);
@@ -41,12 +52,6 @@ public class BossAI : MonoBehaviour
         LookAtPlayer();
         HandleState();
     }
-
-    //private void OnMouseDown()
-    //{
-        
-    //    TakeDamage(50);
-    //}
     public void ChangeState(BossState newState)
     {
         if (currentState != newState)
@@ -107,17 +112,12 @@ public class BossAI : MonoBehaviour
     private void IdleState()
     {
         animator.SetTrigger("Idle");
-
-        if (currentHP <= 200 && !hasCast1)
+        //StartCoroutine(Wait5s());
+        if (currentHP <= maxHP*40/100 && !hasCast1)
         {
             hasCast1 = true;
+            isAudioScream = true;
             ChangeState(BossState.Cast1);
-        }
-        else if (attack2Count >= 2)
-        {
-            //attack2Count = 0;
-            
-            ChangeState(BossState.Cast2);
         }
         else
         {
@@ -132,7 +132,7 @@ public class BossAI : MonoBehaviour
 
         if (Vector2.Distance(transform.position, player.position) <= attackRange)
         {
-            ChangeState(currentHP <= 200 ? BossState.Attack2 : BossState.Attack1);
+            ChangeState(currentHP <= maxHP*40/100 ? BossState.Attack2 : BossState.Attack1);
         }
     }
 
@@ -140,6 +140,7 @@ public class BossAI : MonoBehaviour
     {
         animator.SetTrigger("Attack1");
         DealDame();
+        StartCoroutine(Wait1s());
         ChangeState(BossState.Idle);
     }
 
@@ -154,6 +155,7 @@ public class BossAI : MonoBehaviour
         {
             attack2Count = 0;
             isSpellDame = true;
+            isAudioTele = true;
             StartCoroutine(WaitBeforeCast2());
             ChangeState(BossState.Idle);
         }
@@ -169,8 +171,14 @@ public class BossAI : MonoBehaviour
         ChangeState(BossState.Cast2);
     }
 
-
-
+    private IEnumerator Wait5s()
+    {
+        yield return new WaitForSeconds(5f);
+    }
+    private IEnumerator Wait1s()
+    {
+        yield return new WaitForSeconds(5f);
+    }
     //private void Cast1State()
     //{
     //    animator.SetTrigger("Cast1");
@@ -180,7 +188,12 @@ public class BossAI : MonoBehaviour
     {
         isInvulnerable = true; // Bật trạng thái miễn nhiễm
         animator.SetTrigger("Cast1");
-        Invoke("EndCast1", 5f);
+        if (isAudioScream)
+        {
+            audioSource.PlayOneShot(bossScream);
+            isAudioScream = false;
+        }      
+        Invoke("EndCast1", 8f);
     }
     private void EndCast1()
     {
@@ -206,7 +219,11 @@ public class BossAI : MonoBehaviour
         newPosition.x += 0.8f;
         newPosition.y += 2.95f;
         transform.position = newPosition;
-        
+        if (isAudioTele)
+        {
+            audioSource.PlayOneShot(bossTele);
+            isAudioTele = false;
+        }       
         animator.SetTrigger("Spell2");
         
         StartCoroutine(ReturnToIdleAfterSpell2());
@@ -231,15 +248,13 @@ public class BossAI : MonoBehaviour
     private void HurtState()
     {
         animator.SetTrigger("Hurt");
+        Invoke("ResetHurtTrigger", 0.5f);
         Invoke("ReturnToIdle", 1f);
     }
-    //private IEnumerator HurtCooldown()
-    //{
-    //    isHurting = true;
-    //    ChangeState(BossState.Hurt);
-    //    yield return new WaitForSeconds(1f);
-    //    isHurting = false;
-    //}
+    private void ResetHurtTrigger()
+    {
+        animator.ResetTrigger("Hurt");
+    }
     private void DeathState()
     {
         animator.SetTrigger("Death");
