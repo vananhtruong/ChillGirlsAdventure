@@ -60,7 +60,7 @@ public class Health : MonoBehaviour
             if (!dead)
             {
                 anim.SetTrigger("die");
-                sceneController=FindAnyObjectByType<SceneController>();
+                sceneController = FindAnyObjectByType<SceneController>();
                 sceneController.coins += rewardMoney;
                 sceneController.UpdateCoinUI();
                 Debug.Log("Số tiền hiện tại: " + sceneController.coins);

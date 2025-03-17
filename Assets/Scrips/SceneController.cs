@@ -32,6 +32,7 @@ public class SceneController : MonoBehaviour
             if (currentTao == 0)
             {
                 currentTao = 10;
+                playerDame = 1;
             }
         }
         else
@@ -111,19 +112,31 @@ public class SceneController : MonoBehaviour
     }
     public void AddHealth(int health)
     {
-        maxHealth += health;
-        currentTao += health;
-        UpdateUI();
+        if(coins >=20 )
+        {
+            currentTao += health;
+            coins -= 20;
+            UpdateUI();
+            UpdateCoinUI();
+        }
     }
     public void AddDame(int dame)
     {
-        playerDame += dame;
-        UpdateUI();
+        if (coins >= 10)
+        {
+            playerDame += dame;
+            coins -= 10;
+            UpdateCoinUI();
+        }
     }
     public void AddRobot()
     {
-        haveRobot = true;
-        UpdateUI();
+        if (coins >= 200)
+        {
+            haveRobot = true;
+            coins -= 200;
+            UpdateCoinUI();
+        }
     }
 
     public void TakeDamage(int damage)

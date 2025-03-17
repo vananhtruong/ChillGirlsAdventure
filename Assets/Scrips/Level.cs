@@ -30,7 +30,7 @@ public class Level : MonoBehaviour
     //}
     public void OpenLevel(int levelId)
     {
-        string levelName = "Level " + levelId;
+        string levelName = "Level " + 1;
         SceneManager.LoadScene(levelName);
     }
 }

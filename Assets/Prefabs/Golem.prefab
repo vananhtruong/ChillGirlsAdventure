@@ -224,7 +224,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startingHealth: 3
-  currentHealth: 0
+  currentHealth: 3
   iFramesDuration: 0
   numberOfFlashes: 0
   flashDuration: 0.2
@@ -232,4 +232,3 @@ MonoBehaviour:
   respawnDelay: 2
   enemyHurt: {fileID: 8300000, guid: 2029172f86b60bd40a7565880b4c40ef, type: 3}
   rewardMoney: 5
-  sceneController: {fileID: 0}
