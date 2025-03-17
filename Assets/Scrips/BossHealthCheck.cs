@@ -27,12 +27,12 @@ public class BossHealthCheck : MonoBehaviour
     void Update()
     {
         
-        if (boss != null && boss.currentHP <= 0 && !isDead 
-            )
-        {
-            isDead = true;
-            StartCoroutine(ShowWinScreen());
-        }
+        //if (boss != null && boss.currentHP <= 0 && !isDead 
+        //    )
+        //{
+        //    isDead = true;
+        //    StartCoroutine(ShowWinScreen());
+        //}
         if (sceneController != null && sceneController.currentTao <= 0)
         {
             StartCoroutine(HandleDefeat());

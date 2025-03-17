@@ -224,7 +224,7 @@ public class Player : MonoBehaviour
             if (hitInfo.GetComponent<Health>() != null)
             {
                 Debug.Log("We hit " + hitInfo.name);
-                hitInfo.GetComponent<Health>().TakeDamage(1);
+                hitInfo.GetComponent<Health>().TakeDamage(sceneController.playerDame);
             }
         }
     }
@@ -236,7 +236,7 @@ public class Player : MonoBehaviour
             if (hitInfo.GetComponent<BossAI>() != null)
             {
                 Debug.Log("We hit " + hitInfo.name);
-                hitInfo.GetComponent<BossAI>().TakeDamage(50);
+                hitInfo.GetComponent<BossAI>().TakeDamage(sceneController.playerDame);
             }
             
         }

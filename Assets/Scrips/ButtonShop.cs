@@ -26,6 +26,18 @@ public class ButtonShop : MonoBehaviour
             sceneController.AddShop(itemValue); // Cộng vào máu
         }
     }
+    public void BuyHearth(Button button)
+    {
+        sceneController.AddHealth(1);
+    }
+    public void BuyDame(Button button)
+    {
+        sceneController.AddDame(1);
+    }
+    public void BuyRobot(Button button)
+    {
+        sceneController.AddRobot();
+    }
 
     public void ShopButton()
     {

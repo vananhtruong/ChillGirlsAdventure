@@ -10,12 +10,15 @@ public class CharacterControllerManager : MonoBehaviour
     private bool isControllingPlayer = true;
     private bool isNearRobot = false;
 
+    SceneController sceneController;
+    public bool haveRobot = false;
+
     void Start()
     {
         player.enabled = true;
         robot.enabled = false;
-        robot.gameObject.SetActive(true);
-
+        robot.gameObject.SetActive(false);
+        sceneController = SceneController.instance;
         if (cameraFollow != null)
         {
             cameraFollow.SetTarget(player.transform);
@@ -24,6 +27,11 @@ public class CharacterControllerManager : MonoBehaviour
 
     void Update()
     {
+        haveRobot = sceneController.haveRobot;
+        if (sceneController.haveRobot)
+        {
+            robot.gameObject.SetActive(true);
+        }
         if (isControllingPlayer)
         {
             float distance = Vector2.Distance(player.transform.position, robot.transform.position);

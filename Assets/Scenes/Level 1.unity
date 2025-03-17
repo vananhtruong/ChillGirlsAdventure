@@ -2419,6 +2419,8 @@ MonoBehaviour:
   maxHealth: 10
   currentTao: 0
   TextHeart: {fileID: 7536092933198194683}
+  playerDame: 0
+  haveRobot: 0
 --- !u!1001 &822302012
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4078,11 +4080,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 895822083777630416, guid: 0474df5bfe0e14a41ba63a778eea9693, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 78.27
+      value: 72.32
       objectReference: {fileID: 0}
     - target: {fileID: 895822083777630416, guid: 0474df5bfe0e14a41ba63a778eea9693, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -4.69
+      value: -7.93
       objectReference: {fileID: 0}
     - target: {fileID: 895822083777630416, guid: 0474df5bfe0e14a41ba63a778eea9693, type: 3}
       propertyPath: m_LocalPosition.z

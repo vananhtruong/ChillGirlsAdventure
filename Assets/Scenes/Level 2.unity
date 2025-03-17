@@ -3749,9 +3749,73 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 797684412138920031, guid: 979a4bede3d96e94eaa6a1ae652cc95f, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 104.7604
+      objectReference: {fileID: 0}
+    - target: {fileID: 797684412138920031, guid: 979a4bede3d96e94eaa6a1ae652cc95f, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 797684412138920031, guid: 979a4bede3d96e94eaa6a1ae652cc95f, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 36.426
+      objectReference: {fileID: 0}
+    - target: {fileID: 1705138901052363272, guid: 979a4bede3d96e94eaa6a1ae652cc95f, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: BuyRobot
+      objectReference: {fileID: 0}
+    - target: {fileID: 1786204388056464333, guid: 979a4bede3d96e94eaa6a1ae652cc95f, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2182342235025026423, guid: 979a4bede3d96e94eaa6a1ae652cc95f, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: -70.1189
+      objectReference: {fileID: 0}
+    - target: {fileID: 2182342235025026423, guid: 979a4bede3d96e94eaa6a1ae652cc95f, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -62
+      objectReference: {fileID: 0}
+    - target: {fileID: 2183244944237180674, guid: 979a4bede3d96e94eaa6a1ae652cc95f, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2651314675460952646, guid: 979a4bede3d96e94eaa6a1ae652cc95f, type: 3}
       propertyPath: m_Name
       value: ShopCanvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 3577852159776700052, guid: 979a4bede3d96e94eaa6a1ae652cc95f, type: 3}
+      propertyPath: m_text
+      value: 20Gold
+      objectReference: {fileID: 0}
+    - target: {fileID: 3577852159776700052, guid: 979a4bede3d96e94eaa6a1ae652cc95f, type: 3}
+      propertyPath: m_margin.w
+      value: 100.342514
+      objectReference: {fileID: 0}
+    - target: {fileID: 3577852159776700052, guid: 979a4bede3d96e94eaa6a1ae652cc95f, type: 3}
+      propertyPath: m_TextStyleHashCode
+      value: 2194
+      objectReference: {fileID: 0}
+    - target: {fileID: 3885383556782969632, guid: 979a4bede3d96e94eaa6a1ae652cc95f, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -140
+      objectReference: {fileID: 0}
+    - target: {fileID: 3885383556782969632, guid: 979a4bede3d96e94eaa6a1ae652cc95f, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -148
+      objectReference: {fileID: 0}
+    - target: {fileID: 3900905101723762992, guid: 979a4bede3d96e94eaa6a1ae652cc95f, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: BuyHearth
+      objectReference: {fileID: 0}
+    - target: {fileID: 4102779861984884936, guid: 979a4bede3d96e94eaa6a1ae652cc95f, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4102779861984884936, guid: 979a4bede3d96e94eaa6a1ae652cc95f, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -37
       objectReference: {fileID: 0}
     - target: {fileID: 4147534028907988756, guid: 979a4bede3d96e94eaa6a1ae652cc95f, type: 3}
       propertyPath: m_Pivot.x
@@ -3832,6 +3896,110 @@ PrefabInstance:
     - target: {fileID: 4147534028907988756, guid: 979a4bede3d96e94eaa6a1ae652cc95f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5992795326735134456, guid: 979a4bede3d96e94eaa6a1ae652cc95f, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 170.8427
+      objectReference: {fileID: 0}
+    - target: {fileID: 5992795326735134456, guid: 979a4bede3d96e94eaa6a1ae652cc95f, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 143.5891
+      objectReference: {fileID: 0}
+    - target: {fileID: 5992795326735134456, guid: 979a4bede3d96e94eaa6a1ae652cc95f, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -243
+      objectReference: {fileID: 0}
+    - target: {fileID: 5992795326735134456, guid: 979a4bede3d96e94eaa6a1ae652cc95f, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 26
+      objectReference: {fileID: 0}
+    - target: {fileID: 6253713348802224103, guid: 979a4bede3d96e94eaa6a1ae652cc95f, type: 3}
+      propertyPath: m_Type
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6253713348802224103, guid: 979a4bede3d96e94eaa6a1ae652cc95f, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -1036619366682988694, guid: 36c574c2c8bc97c4c9d086e23f6a8ba5, type: 3}
+    - target: {fileID: 6499059594684384007, guid: 979a4bede3d96e94eaa6a1ae652cc95f, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 115.7201
+      objectReference: {fileID: 0}
+    - target: {fileID: 6499059594684384007, guid: 979a4bede3d96e94eaa6a1ae652cc95f, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 104.76
+      objectReference: {fileID: 0}
+    - target: {fileID: 6499059594684384007, guid: 979a4bede3d96e94eaa6a1ae652cc95f, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 237
+      objectReference: {fileID: 0}
+    - target: {fileID: 6499059594684384007, guid: 979a4bede3d96e94eaa6a1ae652cc95f, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 7350679891810697847, guid: 979a4bede3d96e94eaa6a1ae652cc95f, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: BuyDame
+      objectReference: {fileID: 0}
+    - target: {fileID: 7438994719894854430, guid: 979a4bede3d96e94eaa6a1ae652cc95f, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -8
+      objectReference: {fileID: 0}
+    - target: {fileID: 7438994719894854430, guid: 979a4bede3d96e94eaa6a1ae652cc95f, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -111
+      objectReference: {fileID: 0}
+    - target: {fileID: 7590495715294709298, guid: 979a4bede3d96e94eaa6a1ae652cc95f, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: BuyRobot
+      objectReference: {fileID: 0}
+    - target: {fileID: 7604905330956607241, guid: 979a4bede3d96e94eaa6a1ae652cc95f, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7980164046998320012, guid: 979a4bede3d96e94eaa6a1ae652cc95f, type: 3}
+      propertyPath: m_text
+      value: 100Gold
+      objectReference: {fileID: 0}
+    - target: {fileID: 7980164046998320012, guid: 979a4bede3d96e94eaa6a1ae652cc95f, type: 3}
+      propertyPath: m_margin.y
+      value: 71.327774
+      objectReference: {fileID: 0}
+    - target: {fileID: 7980164046998320012, guid: 979a4bede3d96e94eaa6a1ae652cc95f, type: 3}
+      propertyPath: m_TextStyleHashCode
+      value: 2194
+      objectReference: {fileID: 0}
+    - target: {fileID: 7991942276129444426, guid: 979a4bede3d96e94eaa6a1ae652cc95f, type: 3}
+      propertyPath: m_Type
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7991942276129444426, guid: 979a4bede3d96e94eaa6a1ae652cc95f, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -2407031952559852479, guid: 36c574c2c8bc97c4c9d086e23f6a8ba5, type: 3}
+    - target: {fileID: 8119708444554576678, guid: 979a4bede3d96e94eaa6a1ae652cc95f, type: 3}
+      propertyPath: m_Type
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8119708444554576678, guid: 979a4bede3d96e94eaa6a1ae652cc95f, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -5556516436013594188, guid: b9f1c81e6a34b0749b9699bfbdb57f70, type: 3}
+    - target: {fileID: 8320789767630421304, guid: 979a4bede3d96e94eaa6a1ae652cc95f, type: 3}
+      propertyPath: m_text
+      value: 10Gold
+      objectReference: {fileID: 0}
+    - target: {fileID: 8320789767630421304, guid: 979a4bede3d96e94eaa6a1ae652cc95f, type: 3}
+      propertyPath: m_TextStyleHashCode
+      value: 2194
+      objectReference: {fileID: 0}
+    - target: {fileID: 8448627684008501786, guid: 979a4bede3d96e94eaa6a1ae652cc95f, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 167
+      objectReference: {fileID: 0}
+    - target: {fileID: 8448627684008501786, guid: 979a4bede3d96e94eaa6a1ae652cc95f, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -148
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

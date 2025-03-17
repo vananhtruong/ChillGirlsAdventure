@@ -13,7 +13,12 @@ public class SceneController : MonoBehaviour
     private int initialTao; // Lưu điểm đầu màn
     private int initialHealth; // Lưu máu đầu màn
 
-   
+    public int playerDame;
+    private int initialPlayerDame;
+
+    public bool haveRobot ;
+
+
 
     private void Awake()
     {
@@ -25,6 +30,7 @@ public class SceneController : MonoBehaviour
             if (currentTao == 0)
             {
                 currentTao = maxHealth;
+                playerDame = 1;
             }
         }
         else
@@ -56,6 +62,7 @@ public class SceneController : MonoBehaviour
     {
         currentTao = initialTao; // Khôi phục điểm đầu màn
         maxHealth = initialHealth;
+        playerDame = initialPlayerDame;
         Debug.Log("Reset màn về điểm đầu: Táo = " + currentTao + ", Máu = " + maxHealth);
         UpdateUI();
     }
@@ -79,6 +86,7 @@ public class SceneController : MonoBehaviour
         // 🟢 Khi vào màn mới, lưu lại điểm khởi đầu
         initialTao = currentTao;
         initialHealth = maxHealth;
+        initialPlayerDame = playerDame;
     }
 
     public void AddTao()
@@ -92,6 +100,22 @@ public class SceneController : MonoBehaviour
     {
         currentTao += items;
         Debug.Log("Táo sau khi AddShop: " + currentTao);
+        UpdateUI();
+    }
+    public void AddHealth(int health)
+    {
+        maxHealth += health;
+        currentTao += health;
+        UpdateUI();
+    }
+    public void AddDame(int dame)
+    {
+        playerDame += dame;
+        UpdateUI();
+    }
+    public void AddRobot()
+    {
+        haveRobot = true;
         UpdateUI();
     }
 
@@ -116,6 +140,10 @@ public class SceneController : MonoBehaviour
            // TextHeart.text = "Táo: " + currentTao.ToString();
             TextHeart.text = currentTao.ToString();
         }
+    }
+    public void increateDame()
+    {
+        playerDame++;
     }
 
 }
