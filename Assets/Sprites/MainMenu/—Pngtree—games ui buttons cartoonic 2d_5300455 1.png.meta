@@ -103,10 +103,10 @@ TextureImporter:
       name: "\u2014Pngtree\u2014games ui buttons cartoonic 2d_5300455_0"
       rect:
         serializedVersion: 2
-        x: 45
-        y: 165
-        width: 519
-        height: 217
+        x: 103
+        y: 214
+        width: 392
+        height: 118
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}

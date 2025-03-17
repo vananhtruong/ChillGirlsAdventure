@@ -43,6 +43,10 @@ public class SceneController : MonoBehaviour
         StartCoroutine(LoadLevel(SceneManager.GetActiveScene().buildIndex + 1));
     }
 
+    public void PreviousLevel()
+    {
+        StartCoroutine(LoadLevel(SceneManager.GetActiveScene().buildIndex - 1));
+    }
     public void LoadScene(string sceneName)
     {
         StartCoroutine(LoadLevel(SceneManager.GetSceneByName(sceneName).buildIndex));
