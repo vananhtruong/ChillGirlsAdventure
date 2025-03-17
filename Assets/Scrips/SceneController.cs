@@ -7,11 +7,14 @@ public class SceneController : MonoBehaviour
 {
     public static SceneController instance;
     [SerializeField] Animator transitionAmin;
-    public int maxHealth = 10;
-    public int currentTao = 0; 
+    //public int maxHealth = 10;
+    public int currentTao = 0;
     public Text TextHeart;
     private int initialTao; // Lưu điểm đầu màn
-    private int initialHealth; // Lưu máu đầu màn
+    //private int initialHealth; // Lưu máu đầu màn
+    public int coins = 0;
+    public Text TextCoin;
+    private int initialCoins; // Lưu số coin ban đầu của màn chơi
 
     public int playerDame;
     private int initialPlayerDame;
@@ -26,11 +29,9 @@ public class SceneController : MonoBehaviour
         {
             instance = this;
             DontDestroyOnLoad(gameObject);
-            // Chỉ khởi tạo điểm nếu chưa có
             if (currentTao == 0)
             {
-                currentTao = maxHealth;
-                playerDame = 1;
+                currentTao = 10;
             }
         }
         else
@@ -61,11 +62,13 @@ public class SceneController : MonoBehaviour
     public void ResetToLevelStart()
     {
         currentTao = initialTao; // Khôi phục điểm đầu màn
-        maxHealth = initialHealth;
-        playerDame = initialPlayerDame;
-        Debug.Log("Reset màn về điểm đầu: Táo = " + currentTao + ", Máu = " + maxHealth);
+        //maxHealth = initialHealth;
+        coins = initialCoins; // Khôi phục số coin về giá trị ban đầu
+        //Debug.Log($"Reset màn về điểm đầu: Táo = {currentTao}, Máu = {maxHealth}, Coin = {coins}");
         UpdateUI();
+        UpdateCoinUI();
     }
+
     public IEnumerator LoadLevel(int sceneIndex)
     {
         if (transitionAmin != null)
@@ -75,6 +78,7 @@ public class SceneController : MonoBehaviour
         }
 
         yield return SceneManager.LoadSceneAsync(sceneIndex);
+        yield return null; // Đợi frame tiếp theo để đảm bảo UI đã load hoàn toàn
 
         if (transitionAmin != null)
         {
@@ -83,10 +87,13 @@ public class SceneController : MonoBehaviour
 
         FindAndUpdateUI();
 
-        // 🟢 Khi vào màn mới, lưu lại điểm khởi đầu
+        // Lưu lại giá trị đầu màn mới
         initialTao = currentTao;
-        initialHealth = maxHealth;
-        initialPlayerDame = playerDame;
+        //initialHealth = maxHealth;
+        initialCoins = coins;
+
+        // 🟢 Đảm bảo UI của coin được cập nhật ngay sau khi load màn
+        UpdateCoinUI();
     }
 
     public void AddTao()
@@ -121,23 +128,25 @@ public class SceneController : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
-        maxHealth -= damage;
+        //maxHealth -= damage;
         currentTao -= damage;
         UpdateUI();
     }
 
     private void FindAndUpdateUI()
     {
-        // Tìm lại TextHeart mỗi khi load màn mới
         TextHeart = GameObject.FindWithTag("UIHeart")?.GetComponent<Text>();
+        //TextCoin = GameObject.FindWithTag("UICoin")?.GetComponent<Text>();
+        Debug.Log("Tìm thấy coin: " + TextCoin);
+        Debug.Log("Tìm thấy UIHeart: " + TextHeart);
         UpdateUI();
+        UpdateCoinUI();
     }
 
     private void UpdateUI()
     {
         if (TextHeart != null)
         {
-           // TextHeart.text = "Táo: " + currentTao.ToString();
             TextHeart.text = currentTao.ToString();
         }
     }
@@ -146,4 +155,17 @@ public class SceneController : MonoBehaviour
         playerDame++;
     }
 
+    public void UpdateCoinUI()
+    {
+        if (TextCoin != null)
+        {
+            TextCoin.text = coins.ToString();
+        }
+    }
+    public void Home()
+    {
+        SceneManager.LoadScene("Main Menu");
+        Time.timeScale = 1f;
+        Destroy(gameObject);
+    }
 }

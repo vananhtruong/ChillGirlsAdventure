@@ -68,7 +68,7 @@ public class Player : MonoBehaviour
 
         if (transform.position.y < -12f)
         {
-            PlayerTakeDamage(sceneController.maxHealth); // Giảm toàn bộ máu
+            PlayerTakeDamage(sceneController.currentTao); // Giảm toàn bộ máu
         }
         // sceneController.UpdateUI();
         //  TextHeart.text = currentTao.ToString();
@@ -366,4 +366,6 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(1.5f);
         Destroy(gameObject);
     }
+    
+
 }

@@ -105,15 +105,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 2
-  moveDistance: 5
   attackRange: 3
   attackCooldown: 1
-  attackDamge: 2
+  attackDamage: 2
   player: {fileID: 0}
   attackRadius: 2
   playerLayer:
     serializedVersion: 2
     m_Bits: 8
+  enemyAtk: {fileID: 8300000, guid: 8e7ab391ebce858468844848179a3166, type: 3}
+  startPoint: {x: 4.79, y: -3, z: 0}
+  endPoint: {x: 16, y: -3, z: 0}
 --- !u!61 &7898854021473573
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -228,3 +230,6 @@ MonoBehaviour:
   flashDuration: 0.2
   botPrefab: {fileID: 1525426040041057508}
   respawnDelay: 2
+  enemyHurt: {fileID: 8300000, guid: 2029172f86b60bd40a7565880b4c40ef, type: 3}
+  rewardMoney: 5
+  sceneController: {fileID: 0}
