@@ -8,6 +8,7 @@ TagManager:
   - enemy
   - Background
   - TaoCollect
+  - UIHeart
   layers:
   - Default
   - TransparentFX
@@ -63,8 +64,11 @@ TagManager:
   - name: GroundTile
     uniqueID: 3801932591
     locked: 0
-  - name: Sound
-    uniqueID: 3956125297
+  - name: Shop
+    uniqueID: 1203479455
+    locked: 0
+  - name: Buy
+    uniqueID: 811064267
     locked: 0
   m_RenderingLayers:
   - Default

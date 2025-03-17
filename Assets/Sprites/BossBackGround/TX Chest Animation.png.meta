@@ -218,8 +218,8 @@ TextureImporter:
       name: TX Chest Animation Wooden 0
       rect:
         serializedVersion: 2
-        x: 31
-        y: 448
+        x: 94
+        y: 256
         width: 34
         height: 29
       alignment: 7

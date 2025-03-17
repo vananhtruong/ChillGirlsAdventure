@@ -2,6 +2,7 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class Player : MonoBehaviour
 {
@@ -19,7 +20,7 @@ public class Player : MonoBehaviour
     public float attackRadius = 1.5f;
     public LayerMask targetLayer;
 
-    public int maxHealth = 10;
+   // public int maxHealth = 10;
 
     private bool canDash = true;
     private bool isDashing;
@@ -34,6 +35,9 @@ public class Player : MonoBehaviour
     //background
     private PolygonCollider2D backgroundCollider;
     //collection
+   // public int currentTao = 0;
+  //  public Text TextHeart;
+    private SceneController sceneController;
     public int currentTao = 0;
     public Text TextHeart;
     public int coins = 0;
@@ -54,7 +58,12 @@ public class Player : MonoBehaviour
         {
             audioSource = gameObject.AddComponent<AudioSource>();
         }
-        currentTao = maxHealth;
+        //   currentTao = maxHealth;
+        sceneController = SceneController.instance;
+        if(sceneController == null)
+        {
+            Debug.LogError("sceneController not found!");
+        }
     }
 
     void Update()
@@ -63,9 +72,10 @@ public class Player : MonoBehaviour
 
         if (transform.position.y < -12f)
         {
-            PlayerTakeDamage(maxHealth); // Giảm toàn bộ máu
+            PlayerTakeDamage(sceneController.maxHealth); // Giảm toàn bộ máu
         }
-        TextHeart.text = currentTao.ToString();
+        // sceneController.UpdateUI();
+        //  TextHeart.text = currentTao.ToString();
         if (!enabled) return; // Chỉ chạy khi component được bật
 
         movement = Input.GetAxis("Horizontal");
@@ -107,9 +117,22 @@ public class Player : MonoBehaviour
         }
 
         animator.SetFloat("Run", Mathf.Abs(movement));
+        //if (Input.GetMouseButtonDown(0))
+        //{
+        //    // Kiểm tra xem chuột có đang bấm vào UI không
+        //    if (EventSystem.current.IsPointerOverGameObject())
+        //    {
+        //        return; // Nếu đang bấm UI, không thực hiện chém
+        //    }
 
+        //    Attack(); // Nếu không, thực hiện chém
+        //}
         Attack();
-        if (maxHealth <= 0)
+        //if (maxHealth <= 0)
+        //{
+        //    Die();
+        //}
+        if (sceneController.currentTao <= 0)
         {
             Die();
         }
@@ -169,14 +192,22 @@ public class Player : MonoBehaviour
             isGround = true;
             jumpCount = 0;
         }
-        if (collision.gameObject.tag == "TaoCollect")
+        //if (collision.gameObject.tag == "TaoCollect")
+        //{
+        //    currentTao++;
+        //    maxHealth++;
+        //    collision.gameObject.transform.GetChild(0).GetComponent<Animator>().SetTrigger("Collect");
+        //    Destroy(collision.gameObject, 1f);
+        //    Debug.Log(collision.gameObject.tag + "collected");
+        //}
+        if (collision.gameObject.CompareTag("TaoCollect"))
         {
-            currentTao++;
-            maxHealth++;
+            sceneController.AddTao();
             collision.gameObject.transform.GetChild(0).GetComponent<Animator>().SetTrigger("Collect");
             Destroy(collision.gameObject, 1f);
             Debug.Log(collision.gameObject.tag + "collected");
         }
+
     }
 
     private void OnCollisionExit2D(Collision2D collision)
@@ -234,12 +265,15 @@ public class Player : MonoBehaviour
             Debug.Log("Shield blocked damage!");
             return;
         }
-        if (maxHealth <= 0)
-        {
-            return;
-        }
-        maxHealth -= damage;
-        currentTao -= damage;
+        //if (maxHealth <= 0)
+        //{
+        //    return;
+        //}
+        //maxHealth -= damage;
+        // currentTao -= damage;
+        //SceneController.instance.maxHealth -= damage;
+        //SceneController.instance.currentTao -= damage;
+        sceneController.TakeDamage(damage);
         animator.SetTrigger("Hurt");
         if (hurtSound != null)
         {
@@ -318,8 +352,13 @@ public class Player : MonoBehaviour
     {
         if (other.gameObject.tag == "TaoCollect")
         {
-            currentTao++;
-            maxHealth++;
+            //currentTao++;
+            //maxHealth++;
+            //other.gameObject.transform.GetChild(0).GetComponent<Animator>().SetTrigger("Collect");
+            //Destroy(other.gameObject, 1f);
+            //Debug.Log(other.gameObject.tag + "collected");
+
+            sceneController.AddTao();
             other.gameObject.transform.GetChild(0).GetComponent<Animator>().SetTrigger("Collect");
             Destroy(other.gameObject, 1f);
             Debug.Log(other.gameObject.tag + "collected");
