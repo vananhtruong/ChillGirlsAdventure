@@ -26,7 +26,7 @@ public class PauseMenu : MonoBehaviour
             if (currentSceneIndex == 1)
             {
                 sceneController.currentTao = 10;
-                sceneController.maxHealth = 10;
+                //sceneController.maxHealth = 10;
             }
             else
             {

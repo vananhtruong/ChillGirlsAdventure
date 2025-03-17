@@ -13,7 +13,7 @@ public class FinishScript : MonoBehaviour
             int currentLevel = SceneManager.GetActiveScene().buildIndex;
 
             // Xử lý đặc biệt cho Level 2
-            if (currentLevel == 2) // Giả sử Level 2 có buildIndex là 2
+            if (currentLevel == 2 || currentLevel == 3) // Giả sử Level 2 có buildIndex là 2
             {
                 if (goNextLevel) // Cờ ở cuối map
                 {

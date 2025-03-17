@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      victory-removebg-preview_0: -2973658108461307937
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

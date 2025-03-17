@@ -3736,6 +3736,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: CanvasItem
       objectReference: {fileID: 0}
+    - target: {fileID: 6189951459687775830, guid: 84cb69abfea434a4e842443ffb799932, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6648561859619352796, guid: 84cb69abfea434a4e842443ffb799932, type: 3}
+      propertyPath: m_TagString
+      value: UICoin
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

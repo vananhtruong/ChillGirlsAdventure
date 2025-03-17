@@ -23,7 +23,7 @@ public class Health : MonoBehaviour
     private AudioSource audioSource;
     [SerializeField] private AudioClip enemyHurt;
     public int rewardMoney = 5; // Số tiền nhận được khi giết quái
-
+    private SceneController sceneController;
     private void Awake()
     {
         currentHealth = startingHealth;
@@ -41,7 +41,7 @@ public class Health : MonoBehaviour
         }
     }
 
-
+    [System.Obsolete]
     public void TakeDamage(float _damage)
     {
         currentHealth = Mathf.Clamp(currentHealth - _damage, 0, startingHealth);
@@ -60,13 +60,10 @@ public class Health : MonoBehaviour
             if (!dead)
             {
                 anim.SetTrigger("die");
-                //gameObject.SetActive(false);
-                Player player = GameObject.FindGameObjectWithTag("Player")?.GetComponent<Player>();
-                if (player != null)
-                {
-                    player.coins += rewardMoney;
-                    player.UpdateCoinUI();
-                }
+                sceneController=FindAnyObjectByType<SceneController>();
+                sceneController.coins += rewardMoney;
+                sceneController.UpdateCoinUI();
+                Debug.Log("Số tiền hiện tại: " + sceneController.coins);
                 if (GetComponent<EnemyAI>() != null) GetComponent<EnemyAI>().enabled = false;
                 dead = true;
                 StartCoroutine(DisappearAndRespawn());
@@ -94,7 +91,7 @@ public class Health : MonoBehaviour
     {
         Vector3 deathPosition = transform.position;
         //Quaternion deathRotation = transform.rotation;
-
+        Debug.Log("Bot đã chết tại: " + deathPosition);
         // Tắt Collider để bot không thể bị chạm vào
         Collider2D col = GetComponent<Collider2D>();
         if (col != null) col.enabled = false;

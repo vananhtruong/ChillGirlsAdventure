@@ -196,6 +196,7 @@ MonoBehaviour:
   respawnDelay: 2
   enemyHurt: {fileID: 8300000, guid: 2029172f86b60bd40a7565880b4c40ef, type: 3}
   rewardMoney: 5
+  sceneController: {fileID: 0}
 --- !u!50 &8760994525757812058
 Rigidbody2D:
   serializedVersion: 5

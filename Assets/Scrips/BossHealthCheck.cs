@@ -26,13 +26,14 @@ public class BossHealthCheck : MonoBehaviour
     }
     void Update()
     {
-        
-        if (boss != null && boss.currentHP <= 0 && !isDead 
-            )
-        {
-            isDead = true;
-            StartCoroutine(ShowWinScreen());
-        }
+
+        //if (boss != null && boss.currentHP <= 0 && !isDead 
+        //    )
+        //{
+        //    isDead = true;
+        //    StartCoroutine(ShowWinScreen());
+        //}
+        sceneController = FindAnyObjectByType<SceneController>();
         if (sceneController != null && sceneController.currentTao <= 0)
         {
             StartCoroutine(HandleDefeat());
@@ -65,6 +66,16 @@ public class BossHealthCheck : MonoBehaviour
         else
         {
             Debug.LogWarning("LoseScreen chưa được gán trong Inspector!");
+        }
+    }
+    public void GoToMainMenu()
+    {
+        SceneManager.LoadScene("Main Menu");
+        if (SceneManager.GetActiveScene().name != "Main Menu")
+        {
+            Destroy(gameObject);
+            sceneController = FindAnyObjectByType<SceneController>();
+            Destroy(sceneController.gameObject);
         }
     }
 }
