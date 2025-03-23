@@ -98,7 +98,10 @@ public class Player : MonoBehaviour
         {
             PlayerTakeDamage(1);
         }
-
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            sceneController.increaseGold();
+        }
         if (Input.GetMouseButtonDown(1))
         {
             isShieldActive = true;

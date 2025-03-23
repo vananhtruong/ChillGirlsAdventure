@@ -27,7 +27,7 @@ public class BossAI : MonoBehaviour
 
     public float attackRadius = 4f;
     public LayerMask playerLayer;
-    public int bossDame = 1;
+    public int bossDame = 2;
 
     private AudioSource audioSource;
     [SerializeField] private AudioClip bossTele;

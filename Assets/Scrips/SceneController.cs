@@ -181,4 +181,9 @@ public class SceneController : MonoBehaviour
         Time.timeScale = 1f;
         Destroy(gameObject);
     }
+    public void increaseGold()
+    {
+        coins += 10;
+        UpdateCoinUI();
+    }
 }
