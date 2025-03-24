@@ -14,6 +14,8 @@ public class GameTimer : MonoBehaviour
     private bool isRunning = true;
     public TMP_Text timeText;
     private string filePath;
+
+    public string playerName = "Unknown";
     void Awake()
     {
         if (Instance == null)
@@ -82,8 +84,8 @@ public class GameTimer : MonoBehaviour
     {
         string timestamp = DateTime.Now.ToString("HH:mm dd/MM/yyyy");
         string timePlayed = $"{Mathf.FloorToInt(elapsedTime / 3600):D2}:{Mathf.FloorToInt((elapsedTime % 3600) / 60):D2}:{Mathf.FloorToInt(elapsedTime % 60):D2}";
-        string log = $"{timestamp};{timePlayed}";
-
+        //string log = $"{timestamp};{timePlayed}";
+        string log = $"{timestamp}; {playerName}; {timePlayed}";
         File.AppendAllText(filePath, log + "\n");
     }
 
@@ -106,8 +108,8 @@ public class GameTimer : MonoBehaviour
 
         validLines.Sort((a, b) =>
         {
-            TimeSpan timeA = TimeSpan.Parse(a.Split(';')[1]);
-            TimeSpan timeB = TimeSpan.Parse(b.Split(';')[1]);
+            TimeSpan timeA = TimeSpan.Parse(a.Split(';')[2]);
+            TimeSpan timeB = TimeSpan.Parse(b.Split(';')[2]);
             return timeA.CompareTo(timeB);
         });
 
@@ -116,4 +118,8 @@ public class GameTimer : MonoBehaviour
 
     public void PauseTimer() => isRunning = false;
     public void ResumeTimer() => isRunning = true;
+    public void SetPlayerName(string name)
+    {
+        playerName = name;
+    }
 }

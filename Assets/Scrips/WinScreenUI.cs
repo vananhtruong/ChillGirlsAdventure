@@ -51,7 +51,16 @@ public class WinScreenUI : MonoBehaviour
         int i = 1;
         foreach (string time in topTimes)
         {
-            topTimesText.text += "Top "+i+":  "+time + "\n";
+            //topTimesText.text += "Top "+i+":  "+time + "\n";
+            //i++;
+            string[] parts = time.Split(';'); 
+            if (parts.Length < 3) continue;  
+
+            string datePlayed = parts[0];    // Ngày chơi
+            string playTime = parts[1];      // Thời gian chơi
+            string playerName = parts[2];    // Tên người chơi
+
+            topTimesText.text += $"Top {i}: {playerName} - {playTime} ({datePlayed})\n";
             i++;
         }
     }
